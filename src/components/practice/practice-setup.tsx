@@ -1,14 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { EmptyState } from "@/components/ui/empty-state";
 import { BookIcon, CheckIcon, TargetIcon } from "@/components/ui/icons";
 import type { PracticeQuestionCount, PracticeTaxonomy } from "@/server/questions/queries";
 import { cn } from "@/lib/utils";
+import { startPracticeAttempt } from "@/server/attempts/actions";
+import type { ActiveAttemptSummary } from "@/server/attempts/types";
 
 const questionCounts: Array<{ value: PracticeQuestionCount; label: string }> = [
   { value: 5, label: "5" },
@@ -17,13 +20,15 @@ const questionCounts: Array<{ value: PracticeQuestionCount; label: string }> = [
   { value: "all", label: "All available" },
 ];
 
-export function PracticeSetup({ taxonomy }: { taxonomy: PracticeTaxonomy }) {
+export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeTaxonomy; activeAttempt: ActiveAttemptSummary | null }) {
   const router = useRouter();
   const [subjectId, setSubjectId] = useState(taxonomy[0]?.id ?? "");
   const [chapterId, setChapterId] = useState("");
   const [topicId, setTopicId] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [count, setCount] = useState<PracticeQuestionCount>(5);
+  const [message, setMessage] = useState<string>();
+  const [isPending, startTransition] = useTransition();
 
   const subject = useMemo(
     () => taxonomy.find((item) => item.id === subjectId),
@@ -43,17 +48,22 @@ export function PracticeSetup({ taxonomy }: { taxonomy: PracticeTaxonomy }) {
   }
 
   function startPractice() {
-    if (!subjectId) return;
-
-    const params = new URLSearchParams({
-      start: "1",
-      subjectId,
-      count: String(count),
+    if (!subjectId || isPending) return;
+    setMessage(undefined);
+    startTransition(async () => {
+      const result = await startPracticeAttempt({
+        subjectId,
+        chapterId: chapterId || undefined,
+        topicId: topicId || undefined,
+        difficulty: difficulty || undefined,
+        count,
+      });
+      if (result.status === "invalid") {
+        setMessage(result.message);
+        return;
+      }
+      router.push(`/practice/attempt/${result.attemptId}`);
     });
-    if (chapterId) params.set("chapterId", chapterId);
-    if (topicId) params.set("topicId", topicId);
-    if (difficulty) params.set("difficulty", difficulty);
-    router.push(`/practice?${params.toString()}`);
   }
 
   return (
@@ -72,15 +82,31 @@ export function PracticeSetup({ taxonomy }: { taxonomy: PracticeTaxonomy }) {
               <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-green-100 text-green-700"><TargetIcon /></span>
               <p className="mt-5 text-sm font-bold uppercase tracking-wider text-green-700">Practice mode</p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Build a focused practice set</h1>
-              <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">Choose what to study and check each answer as you go. There is no timer and nothing is saved to an account.</p>
+              <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">Choose what to study and check each answer as you go. There is no timer, and progress is saved to your anonymous browser session.</p>
             </div>
 
-            {taxonomy.length === 0 ? (
-              <Card className="mt-10 border-dashed p-8 text-center">
-                <h2 className="text-lg font-bold text-slate-900">No published practice content is available</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-500">Check the database connection and ensure published questions have been seeded.</p>
-                <ButtonLink href="/questions" variant="secondary" className="mt-5">Open question bank</ButtonLink>
+            {activeAttempt && (
+              <Card className="mt-8 flex flex-col justify-between gap-4 border-green-200 bg-green-50 p-5 sm:flex-row sm:items-center">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-green-700">Practice in progress</p>
+                  <h2 className="mt-1 font-bold text-slate-950">{activeAttempt.name}</h2>
+                  <p className="mt-1 text-sm text-slate-600">Question {activeAttempt.currentQuestionIndex + 1} of {activeAttempt.totalQuestions} · refresh-safe</p>
+                </div>
+                <ButtonLink href={`/practice/attempt/${activeAttempt.id}`} className="shrink-0">Resume practice</ButtonLink>
               </Card>
+            )}
+
+            {message && <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">{message}</div>}
+
+            {taxonomy.length === 0 ? (
+              <div className="mt-10">
+                <EmptyState
+                  icon={<BookIcon />}
+                  title="No published practice content is available"
+                  description="Check the database connection, apply migrations, and import published content before building a practice set."
+                  action={<ButtonLink href="/questions" variant="secondary">Open question bank</ButtonLink>}
+                />
+              </div>
             ) : (
               <Card className="mt-10 p-5 sm:p-7">
                 <section>
@@ -150,10 +176,10 @@ export function PracticeSetup({ taxonomy }: { taxonomy: PracticeTaxonomy }) {
 
                 <div className="mt-8 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
                   <p className="flex items-center gap-2 font-semibold text-slate-800"><CheckIcon className="size-4 text-green-700" />Immediate feedback enabled</p>
-                  <p className="mt-1 pl-6">Answers and progress remain only in this browser tab for the current session.</p>
+                  <p className="mt-1 pl-6">Answers, checked explanations, and your current position are restored after refresh.</p>
                 </div>
 
-                <Button type="button" size="lg" className="mt-6 w-full" onClick={startPractice}>Start practice</Button>
+                <Button type="button" size="lg" className="mt-6 w-full" disabled={isPending} onClick={startPractice}>{isPending ? "Creating saved practice..." : "Start practice"}</Button>
               </Card>
             )}
           </div>

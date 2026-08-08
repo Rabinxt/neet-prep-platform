@@ -3,7 +3,7 @@ import { SubjectCard } from "@/components/subjects/subject-card";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
-import { ArrowRightIcon, ChartIcon, CheckIcon, ClockIcon, SparkIcon, TargetIcon } from "@/components/ui/icons";
+import { ArrowRightIcon, BookIcon, ChartIcon, CheckIcon, ClockIcon, SparkIcon, TargetIcon } from "@/components/ui/icons";
 import { listPublicSubjects } from "@/server/subjects/queries";
 
 export const revalidate = 3600;
@@ -26,8 +26,21 @@ const benefits = [
   },
 ];
 
+const quickActions = [
+  { href: "/questions", icon: BookIcon, title: "Question bank", description: "Check answers one at a time" },
+  { href: "/practice", icon: TargetIcon, title: "Practice mode", description: "Build a focused untimed set" },
+  { href: "/mock-tests", icon: ClockIcon, title: "Mock tests", description: "Take a timed development exam" },
+  { href: "/pyq", icon: ChartIcon, title: "Previous years", description: "Browse verified PYQs when added" },
+];
+
 export default async function HomePage() {
   const { subjects } = await listPublicSubjects();
+  const totalQuestions = subjects.reduce((total, subject) => total + subject.questionCount, 0);
+  const subjectColors: Record<string, string> = {
+    physics: "bg-blue-400",
+    chemistry: "bg-violet-400",
+    biology: "bg-green-400",
+  };
 
   return (
     <>
@@ -64,38 +77,59 @@ export default async function HomePage() {
             <div className="relative">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-400">Today&apos;s study plan</p>
-                  <p className="mt-1 text-xl font-bold">Keep your momentum</p>
+                  <p className="text-sm font-medium text-slate-400">Published content</p>
+                  <p className="mt-1 text-xl font-bold">Pick a subject to begin</p>
                 </div>
                 <span className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-green-300">Sample</span>
               </div>
               <div className="mt-7 space-y-3">
-                {[
-                  ["Physics", "Laws of Motion", "12 questions", "bg-blue-400"],
-                  ["Chemistry", "Chemical Bonding", "15 questions", "bg-violet-400"],
-                  ["Biology", "Human Physiology", "20 questions", "bg-green-400"],
-                ].map(([subject, topic, count, color], index) => (
-                  <div key={subject} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.06] p-4">
-                    <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${color} text-sm font-bold text-slate-950`}>{index + 1}</span>
+                {subjects.map((subject, index) => (
+                  <div key={subject.slug} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.06] p-4">
+                    <span className={`grid size-9 shrink-0 place-items-center rounded-lg ${subjectColors[subject.slug] ?? "bg-slate-300"} text-sm font-bold text-slate-950`}>{index + 1}</span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-slate-400">{subject}</p>
-                      <p className="truncate font-semibold">{topic}</p>
+                      <p className="text-xs font-medium text-slate-400">{subject.chapterCount} chapters</p>
+                      <p className="truncate font-semibold">{subject.name}</p>
                     </div>
-                    <span className="text-xs text-slate-400">{count}</span>
+                    <span className="text-xs text-slate-400">{subject.questionCount} questions</span>
                   </div>
                 ))}
               </div>
               <div className="mt-5 rounded-xl bg-green-500/15 p-4">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-green-100">Daily goal</span>
-                  <span className="font-bold text-green-300">32 / 50 questions</span>
+                  <span className="font-medium text-green-100">Current question bank</span>
+                  <span className="font-bold text-green-300">{totalQuestions} published</span>
                 </div>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full w-[64%] rounded-full bg-green-400" />
-                </div>
+                <p className="mt-2 text-xs leading-5 text-green-100/80">Development questions are labelled SAMPLE. Verified PYQs can be imported separately.</p>
               </div>
             </div>
           </Card>
+        </Container>
+      </section>
+
+      <section className="border-b border-slate-200 bg-slate-50 py-8 sm:py-10">
+        <Container>
+          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-green-700">Quick start</p>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">Choose how you want to study</h2>
+            </div>
+            <p className="text-sm text-slate-500">Current questions are development samples.</p>
+          </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {quickActions.map(({ href, icon: Icon, title, description }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-green-200 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              >
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-green-50 text-green-700 transition-colors group-hover:bg-green-100"><Icon /></span>
+                <span className="min-w-0">
+                  <span className="block font-bold text-slate-950">{title}</span>
+                  <span className="mt-0.5 block text-xs leading-5 text-slate-500">{description}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </Container>
       </section>
 

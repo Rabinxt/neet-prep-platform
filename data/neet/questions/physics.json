@@ -1,0 +1,68 @@
+[
+  {
+    "id": "physics-laws-inertia-001",
+    "legacyId": "dev-question-physics-01",
+    "subjectId": "physics",
+    "chapterId": "physics-laws-of-motion",
+    "topicId": "physics-laws-inertia",
+    "questionText": "A passenger moves forward when a moving bus stops suddenly. Which property best explains this observation?",
+    "explanation": "The passenger's body tends to remain in motion when the bus stops, demonstrating inertia of motion.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Inertia of rest", "isCorrect": false },
+      { "label": "B", "text": "Inertia of motion", "isCorrect": true },
+      { "label": "C", "text": "Conservation of charge", "isCorrect": false },
+      { "label": "D", "text": "Gravitational attraction", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-laws-newton-second-law-001",
+    "legacyId": "dev-question-physics-02",
+    "subjectId": "physics",
+    "chapterId": "physics-laws-of-motion",
+    "topicId": "physics-laws-newton-second-law",
+    "questionText": "A net force of 10 N acts on a 2 kg object. What is its acceleration?",
+    "explanation": "Newton's second law gives a = F/m = 10/2 = 5 m/s^2.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 2,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "2 m/s^2", "isCorrect": false },
+      { "label": "B", "text": "4 m/s^2", "isCorrect": false },
+      { "label": "C", "text": "5 m/s^2", "isCorrect": true },
+      { "label": "D", "text": "20 m/s^2", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-work-kinetic-energy-001",
+    "legacyId": "dev-question-physics-03",
+    "subjectId": "physics",
+    "chapterId": "physics-work-energy-power",
+    "topicId": "physics-work-kinetic-energy",
+    "questionText": "If the speed of an object is doubled while its mass remains constant, its kinetic energy becomes:",
+    "explanation": "Kinetic energy is proportional to the square of speed, so doubling speed makes it four times as large.",
+    "difficulty": "MEDIUM",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Two times", "isCorrect": false },
+      { "label": "B", "text": "Four times", "isCorrect": true },
+      { "label": "C", "text": "Eight times", "isCorrect": false },
+      { "label": "D", "text": "Unchanged", "isCorrect": false }
+    ]
+  }
+]

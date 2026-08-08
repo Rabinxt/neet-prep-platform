@@ -14,7 +14,11 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:health": "tsx scripts/check-database.ts"
+    "db:health": "tsx scripts/check-database.ts",
+    "content:validate": "tsx scripts/content/validate.ts",
+    "content:import": "tsx scripts/content/import.ts",
+    "test:attempts": "tsx --test src/server/attempts/scoring.test.ts",
+    "test:attempts:integration": "tsx scripts/test-attempt-persistence.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

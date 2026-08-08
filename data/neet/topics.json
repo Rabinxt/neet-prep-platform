@@ -1,0 +1,13 @@
+[
+  { "id": "physics-laws-inertia", "chapterId": "physics-laws-of-motion", "slug": "inertia", "name": "Inertia", "description": "Inertia of rest, motion, and direction.", "order": 1 },
+  { "id": "physics-laws-newton-second-law", "chapterId": "physics-laws-of-motion", "slug": "newtons-second-law", "name": "Newton's Second Law", "description": "Force, mass, acceleration, impulse, and momentum change.", "order": 2 },
+  { "id": "physics-work-kinetic-energy", "chapterId": "physics-work-energy-power", "slug": "kinetic-energy", "name": "Kinetic Energy", "description": "Kinetic energy and its dependence on mass and velocity.", "order": 1 },
+
+  { "id": "chemistry-atom-atomic-number", "chapterId": "chemistry-structure-of-atom", "slug": "atomic-number", "name": "Atomic Number and Mass Number", "description": "Protons, neutrons, electrons, atomic number, and mass number.", "order": 1 },
+  { "id": "chemistry-equilibrium-acids-bases", "chapterId": "chemistry-equilibrium", "slug": "acids-bases-ph", "name": "Acids, Bases and pH", "description": "Hydrogen ion concentration, pH, and neutral aqueous solutions.", "order": 1 },
+  { "id": "chemistry-bonding-covalent", "chapterId": "chemistry-chemical-bonding", "slug": "covalent-bonding", "name": "Covalent Bonding", "description": "Electron sharing, bond formation, and basic molecular structure.", "order": 1 },
+
+  { "id": "biology-cell-organelles", "chapterId": "biology-cell-unit-of-life", "slug": "cell-organelles", "name": "Cell Organelles", "description": "Structure and function of membrane-bound and non-membranous organelles.", "order": 1 },
+  { "id": "biology-biomolecules-nucleic-acids", "chapterId": "biology-biomolecules", "slug": "nucleic-acids", "name": "Nucleic Acids", "description": "DNA, RNA, nucleotides, and nitrogenous bases.", "order": 1 },
+  { "id": "biology-photosynthesis-chloroplast", "chapterId": "biology-photosynthesis", "slug": "chloroplast", "name": "Chloroplast and Photosynthetic Apparatus", "description": "Chloroplast structure, pigments, and sites of photosynthetic reactions.", "order": 1 }
+]

@@ -32,6 +32,7 @@ export type PublishedQuestionFilters = {
 };
 
 export type PracticeQuestionCount = 5 | 10 | 20 | "all";
+export type ExamQuestionCount = 5 | 10 | 20 | "all";
 
 export type PracticeTaxonomy = Array<{
   id: string;
@@ -120,6 +121,53 @@ export function listPracticeQuestions(
     ...filters,
     limit: count === "all" ? null : count,
   });
+}
+
+export async function listExamQuestions({
+  subjectSlug,
+  count,
+}: {
+  subjectSlug?: string;
+  count: ExamQuestionCount;
+}) {
+  const available = await listPublishedQuestions({
+    subjectSlug,
+    limit: null,
+  });
+
+  if (count === "all" || available.length <= count) {
+    return available;
+  }
+
+  if (subjectSlug) {
+    return available.slice(0, count);
+  }
+
+  const bySubject = new Map<string, PublicQuestion[]>();
+  for (const question of available) {
+    const group = bySubject.get(question.subject.slug) ?? [];
+    group.push(question);
+    bySubject.set(question.subject.slug, group);
+  }
+
+  const groups = [...bySubject.values()];
+  const selected: PublicQuestion[] = [];
+  let round = 0;
+
+  while (selected.length < count) {
+    let addedThisRound = false;
+    for (const group of groups) {
+      const question = group[round];
+      if (question && selected.length < count) {
+        selected.push(question);
+        addedThisRound = true;
+      }
+    }
+    if (!addedThisRound) break;
+    round += 1;
+  }
+
+  return selected;
 }
 
 export async function listPracticeTaxonomy(): Promise<PracticeTaxonomy> {

@@ -58,31 +58,127 @@ model Topic {
 }
 
 model Question {
-  id            String           @id @default(cuid())
-  subjectId     String
-  chapterId     String
-  topicId       String?
-  questionText  String
-  explanation   String?
-  difficulty    Difficulty       @default(MEDIUM)
-  sourceType    QuestionSource   @default(ORIGINAL)
-  examYear      Int?
-  positiveMarks Int              @default(4)
-  negativeMarks Int              @default(1)
-  order         Int              @default(0)
-  isPublished   Boolean          @default(false)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  subject       Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  chapter       Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topic         Topic?           @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  options       QuestionOption[]
+  id               String            @id @default(cuid())
+  importId         String?           @unique
+  subjectId        String
+  chapterId        String
+  topicId          String?
+  questionText     String
+  explanation      String?
+  difficulty       Difficulty        @default(MEDIUM)
+  sourceType       QuestionSource    @default(ORIGINAL)
+  examYear         Int?
+  positiveMarks    Int               @default(4)
+  negativeMarks    Int               @default(1)
+  order            Int               @default(0)
+  isPublished      Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  subject          Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  chapter          Chapter           @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topic            Topic?            @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  options          QuestionOption[]
+  attemptQuestions AttemptQuestion[]
 
   @@index([subjectId, isPublished, difficulty])
   @@index([chapterId, isPublished, difficulty])
   @@index([topicId, isPublished, difficulty])
   @@index([sourceType, examYear, isPublished])
   @@index([chapterId, order])
+}
+
+model AnonymousSession {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  lastSeenAt DateTime  @default(now())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  attempts   Attempt[]
+
+  @@index([lastSeenAt])
+}
+
+model Attempt {
+  id                   String            @id @default(cuid())
+  anonymousSessionId   String?
+  type                 AttemptType
+  status               AttemptStatus     @default(IN_PROGRESS)
+  name                 String
+  configuration        Json?
+  startedAt            DateTime          @default(now())
+  completedAt          DateTime?
+  expiresAt            DateTime?
+  currentQuestionIndex Int               @default(0)
+  totalQuestions       Int
+  attemptedQuestions   Int               @default(0)
+  correct              Int               @default(0)
+  incorrect            Int               @default(0)
+  unanswered           Int
+  score                Int               @default(0)
+  maximumMarks         Int
+  accuracy             Float             @default(0)
+  subjectBreakdown     Json?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  anonymousSession     AnonymousSession? @relation(fields: [anonymousSessionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  questions            AttemptQuestion[]
+
+  @@index([anonymousSessionId, type, status, updatedAt])
+  @@index([status, expiresAt])
+}
+
+model AttemptQuestion {
+  id               String                  @id @default(cuid())
+  attemptId        String
+  sourceQuestionId String?
+  order            Int
+  questionText     String
+  explanation      String?
+  difficulty       Difficulty
+  sourceType       QuestionSource
+  examYear         Int?
+  positiveMarks    Int
+  negativeMarks    Int
+  subjectName      String
+  subjectSlug      String
+  subjectOrder     Int
+  chapterName      String
+  chapterSlug      String
+  topicName        String?
+  topicSlug        String?
+  selectedOptionId String?
+  responseStatus   AttemptQuestionStatus   @default(NOT_VISITED)
+  checkedAt        DateTime?
+  isCorrect        Boolean?
+  marksAwarded     Int?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  attempt          Attempt                 @relation(fields: [attemptId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sourceQuestion   Question?               @relation(fields: [sourceQuestionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  options          AttemptQuestionOption[] @relation("SnapshotOptions")
+  selectedOption   AttemptQuestionOption?  @relation("SelectedAttemptOption", fields: [selectedOptionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@unique([attemptId, order])
+  @@unique([attemptId, sourceQuestionId])
+  @@index([attemptId, responseStatus])
+  @@index([sourceQuestionId])
+  @@index([selectedOptionId])
+}
+
+model AttemptQuestionOption {
+  id                String            @id @default(cuid())
+  attemptQuestionId String
+  sourceOptionId    String?
+  optionText        String
+  optionLabel       String
+  order             Int
+  isCorrect         Boolean
+  attemptQuestion   AttemptQuestion   @relation("SnapshotOptions", fields: [attemptQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  selectedBy        AttemptQuestion[] @relation("SelectedAttemptOption")
+
+  @@unique([attemptQuestionId, order])
+  @@unique([attemptQuestionId, optionLabel])
+  @@index([sourceOptionId])
 }
 
 model QuestionOption {
@@ -108,4 +204,24 @@ enum QuestionSource {
   ORIGINAL
   PYQ
   SAMPLE
+}
+
+enum AttemptType {
+  PRACTICE
+  MOCK_EXAM
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+  ABANDONED
+}
+
+enum AttemptQuestionStatus {
+  NOT_VISITED
+  NOT_ANSWERED
+  ANSWERED
+  MARKED_FOR_REVIEW
+  ANSWERED_AND_MARKED_FOR_REVIEW
 }

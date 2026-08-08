@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { QuestionFilters } from "@/components/questions/question-filters";
 import { QuestionStudy } from "@/components/questions/question-study";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
+import { PageHeading } from "@/components/ui/page-heading";
+import {
+  listPracticeTaxonomy,
+  listPublishedQuestions,
+  parseDifficulty,
+} from "@/server/questions/queries";
 import { listPublicSubjects } from "@/server/subjects/queries";
-import { listPublishedQuestions, parseDifficulty } from "@/server/questions/queries";
 
 export const metadata: Metadata = {
   title: "Question Bank",
@@ -22,44 +28,50 @@ function firstValue(value: string | string[] | undefined) {
 
 export default async function QuestionsPage({ searchParams }: QuestionsPageProps) {
   const params = await searchParams;
-  const { subjects, source } = await listPublicSubjects();
+  const [{ subjects, source }, taxonomy] = await Promise.all([
+    listPublicSubjects(),
+    listPracticeTaxonomy(),
+  ]);
   const requestedSubject = firstValue(params.subject);
   const subjectSlug = subjects.some((subject) => subject.slug === requestedSubject)
     ? requestedSubject
     : subjects[0]?.slug;
+  const selectedSubject = taxonomy.find((subject) => subject.slug === subjectSlug);
+  const requestedChapter = firstValue(params.chapter);
+  const chapterId = selectedSubject?.chapters.some((chapter) => chapter.id === requestedChapter)
+    ? requestedChapter
+    : undefined;
+  const selectedChapter = selectedSubject?.chapters.find((chapter) => chapter.id === chapterId);
+  const requestedTopic = firstValue(params.topic);
+  const topicId = selectedChapter?.topics.some((topic) => topic.id === requestedTopic)
+    ? requestedTopic
+    : undefined;
   const difficulty = parseDifficulty(firstValue(params.difficulty));
+  const requestedYear = Number(firstValue(params.year));
+  const examYear = Number.isInteger(requestedYear)
+    && requestedYear >= 2013
+    && requestedYear <= new Date().getFullYear()
+    ? requestedYear
+    : undefined;
   const questions = subjectSlug
-    ? await listPublishedQuestions({ subjectSlug, difficulty })
+    ? await listPublishedQuestions({ subjectSlug, chapterId, topicId, difficulty, examYear })
     : [];
 
   return (
     <>
       <section className="border-b border-slate-200 bg-white">
         <Container className="py-10 sm:py-12">
-          <p className="text-sm font-bold uppercase tracking-wider text-green-700">Question bank</p>
-          <div className="mt-3 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Study one question at a time</h1>
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">Choose a subject, test your understanding, and review the explanation. This is untimed study—not an exam.</p>
-            </div>
-            <form className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-[180px_160px_auto]" method="get">
-              <label className="text-xs font-semibold text-slate-600">
-                Subject
-                <select name="subject" defaultValue={subjectSlug} className="mt-1.5 h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 focus-visible:outline-2">
-                  {subjects.map((subject) => <option key={subject.id} value={subject.slug}>{subject.name}</option>)}
-                </select>
-              </label>
-              <label className="text-xs font-semibold text-slate-600">
-                Difficulty
-                <select name="difficulty" defaultValue={difficulty ?? ""} className="mt-1.5 h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 focus-visible:outline-2">
-                  <option value="">All levels</option>
-                  <option value="EASY">Easy</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HARD">Hard</option>
-                </select>
-              </label>
-              <Button type="submit" size="sm" className="self-end">Apply filters</Button>
-            </form>
+          <PageHeading
+            eyebrow="Question bank"
+            title="Study one question at a time"
+            description="Filter the published question bank, test your understanding, and reveal each explanation only after checking your answer."
+            actions={<Badge tone="green">{questions.length} question{questions.length === 1 ? "" : "s"}</Badge>}
+          />
+          <div className="mt-8">
+            <QuestionFilters
+              taxonomy={taxonomy}
+              initial={{ subjectSlug, chapterId, topicId, difficulty, examYear }}
+            />
           </div>
         </Container>
       </section>
@@ -71,7 +83,10 @@ export default async function QuestionsPage({ searchParams }: QuestionsPageProps
               PostgreSQL is currently unavailable. Subject navigation remains visible, but questions require the database connection.
             </div>
           )}
-          <QuestionStudy key={`${subjectSlug}-${difficulty ?? "all"}`} questions={questions} />
+          <QuestionStudy
+            key={`${subjectSlug}-${chapterId}-${topicId}-${difficulty ?? "all"}-${examYear ?? "all"}`}
+            questions={questions}
+          />
         </Container>
       </section>
     </>

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ArrowRightIcon, BookIcon, CheckIcon } from "@/components/ui/icons";
 import { checkQuestionAnswer, type AnswerCheckResult } from "@/server/questions/actions";
 import type { PublicQuestion } from "@/server/questions/queries";
 import { cn } from "@/lib/utils";
@@ -26,12 +28,11 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
 
   if (questions.length === 0) {
     return (
-      <Card className="border-dashed p-8 text-center sm:p-12">
-        <h2 className="text-xl font-bold text-slate-900">No published questions found</h2>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
-          Try a different subject or difficulty. If the database was just created, apply the migration and run the development seed first.
-        </p>
-      </Card>
+      <EmptyState
+        icon={<BookIcon />}
+        title="No published questions found"
+        description="Try a broader chapter, topic, difficulty, or year filter. Imported content must also be published before it appears here."
+      />
     );
   }
 
@@ -81,9 +82,9 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
               <span className={cn("rounded-full px-2.5 py-1", difficultyStyles[question.difficulty])}>
                 {question.difficulty.toLowerCase()}
               </span>
-              <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">
+              <Badge tone="blue">
                 {question.sourceType === "SAMPLE" ? "Development sample" : question.sourceType}
-              </span>
+              </Badge>
               <span className="rounded-full bg-slate-200 px-2.5 py-1 text-slate-700">
                 +{question.positiveMarks} / −{question.negativeMarks}
               </span>
@@ -119,7 +120,7 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
                 <label
                   key={option.id}
                   className={cn(
-                    "flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors",
+                    "flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-green-600",
                     !checkedResult && isSelected && "border-green-600 bg-green-50",
                     !checkedResult && !isSelected && "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
                     isCorrectOption && "border-green-600 bg-green-50",

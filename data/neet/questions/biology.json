@@ -1,0 +1,68 @@
+[
+  {
+    "id": "biology-cell-organelles-001",
+    "legacyId": "dev-question-biology-01",
+    "subjectId": "biology",
+    "chapterId": "biology-cell-unit-of-life",
+    "topicId": "biology-cell-organelles",
+    "questionText": "Which cell organelle is commonly called the powerhouse of the cell?",
+    "explanation": "Mitochondria generate most of the cell's ATP through aerobic respiration.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Golgi apparatus", "isCorrect": false },
+      { "label": "B", "text": "Lysosome", "isCorrect": false },
+      { "label": "C", "text": "Mitochondrion", "isCorrect": true },
+      { "label": "D", "text": "Ribosome", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-biomolecules-nucleic-acids-001",
+    "legacyId": "dev-question-biology-02",
+    "subjectId": "biology",
+    "chapterId": "biology-biomolecules",
+    "topicId": "biology-biomolecules-nucleic-acids",
+    "questionText": "Which nitrogenous base is normally absent from DNA?",
+    "explanation": "DNA contains adenine, thymine, guanine, and cytosine. Uracil normally occurs in RNA instead of thymine.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Adenine", "isCorrect": false },
+      { "label": "B", "text": "Guanine", "isCorrect": false },
+      { "label": "C", "text": "Cytosine", "isCorrect": false },
+      { "label": "D", "text": "Uracil", "isCorrect": true }
+    ]
+  },
+  {
+    "id": "biology-photosynthesis-chloroplast-001",
+    "legacyId": "dev-question-biology-03",
+    "subjectId": "biology",
+    "chapterId": "biology-photosynthesis",
+    "topicId": "biology-photosynthesis-chloroplast",
+    "questionText": "In plant cells, photosynthesis takes place mainly in the:",
+    "explanation": "Chloroplasts contain chlorophyll and the internal membrane systems required for photosynthesis.",
+    "difficulty": "MEDIUM",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Nucleus", "isCorrect": false },
+      { "label": "B", "text": "Chloroplast", "isCorrect": true },
+      { "label": "C", "text": "Vacuole", "isCorrect": false },
+      { "label": "D", "text": "Cell wall", "isCorrect": false }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "physics",
+    "name": "Physics",
+    "description": "Build conceptual clarity and numerical problem-solving across the NEET Physics syllabus.",
+    "order": 1
+  },
+  {
+    "id": "chemistry",
+    "name": "Chemistry",
+    "description": "Connect Physical, Organic, and Inorganic Chemistry through NCERT-aligned study.",
+    "order": 2
+  },
+  {
+    "id": "biology",
+    "name": "Biology",
+    "description": "Master NCERT concepts across Botany and Zoology with precise, high-retention practice.",
+    "order": 3
+  }
+]

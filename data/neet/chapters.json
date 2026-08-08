@@ -1,0 +1,12 @@
+[
+  { "id": "physics-laws-of-motion", "subjectId": "physics", "slug": "laws-of-motion", "name": "Laws of Motion", "description": "Inertia, force, momentum, friction, and Newton's laws of motion.", "order": 1 },
+  { "id": "physics-work-energy-power", "subjectId": "physics", "slug": "work-energy-power", "name": "Work, Energy and Power", "description": "Work-energy theorem, kinetic and potential energy, power, and collisions.", "order": 2 },
+
+  { "id": "chemistry-structure-of-atom", "subjectId": "chemistry", "slug": "structure-of-atom", "name": "Structure of Atom", "description": "Atomic models, subatomic particles, quantum numbers, and electronic configuration.", "order": 1 },
+  { "id": "chemistry-equilibrium", "subjectId": "chemistry", "slug": "equilibrium", "name": "Equilibrium", "description": "Chemical and ionic equilibrium, acids, bases, and buffer systems.", "order": 2 },
+  { "id": "chemistry-chemical-bonding", "subjectId": "chemistry", "slug": "chemical-bonding", "name": "Chemical Bonding and Molecular Structure", "description": "Ionic and covalent bonding, molecular geometry, and bonding theories.", "order": 3 },
+
+  { "id": "biology-cell-unit-of-life", "subjectId": "biology", "slug": "cell-unit-of-life", "name": "Cell: The Unit of Life", "description": "Cell structure, organelles, membranes, and differences among cell types.", "order": 1 },
+  { "id": "biology-biomolecules", "subjectId": "biology", "slug": "biomolecules", "name": "Biomolecules", "description": "Proteins, carbohydrates, lipids, nucleic acids, and enzymes.", "order": 2 },
+  { "id": "biology-photosynthesis", "subjectId": "biology", "slug": "photosynthesis", "name": "Photosynthesis in Higher Plants", "description": "Photosynthetic pigments, light reactions, carbon fixation, and limiting factors.", "order": 3 }
+]

@@ -10,6 +10,7 @@ export type SubjectSummary = {
   description: string;
   order: number;
   chapterCount: number;
+  questionCount: number;
 };
 
 export type SubjectDetail = SubjectSummary & {
@@ -21,6 +22,7 @@ export type SubjectDetail = SubjectSummary & {
     description: string;
     order: number;
     topicCount: number;
+    questionCount: number;
   }>;
 };
 
@@ -31,6 +33,7 @@ function fallbackSubjects(): SubjectSummary[] {
     id: `fallback-${subject.slug}`,
     ...subject,
     chapterCount: 0,
+    questionCount: 0,
   }));
 }
 
@@ -51,7 +54,12 @@ export const listPublicSubjects = cache(async (): Promise<{
         slug: true,
         description: true,
         order: true,
-        _count: { select: { chapters: true } },
+        _count: {
+          select: {
+            chapters: true,
+            questions: { where: { isPublished: true } },
+          },
+        },
       },
     });
 
@@ -60,6 +68,7 @@ export const listPublicSubjects = cache(async (): Promise<{
       subjects: subjects.map(({ _count, ...subject }) => ({
         ...subject,
         chapterCount: _count.chapters,
+        questionCount: _count.questions,
       })),
     };
   } catch {
@@ -89,6 +98,9 @@ export const getPublicSubject = cache(async (slug: string): Promise<{
         slug: true,
         description: true,
         order: true,
+        _count: {
+          select: { questions: { where: { isPublished: true } } },
+        },
         chapters: {
           orderBy: { order: "asc" },
           select: {
@@ -97,7 +109,12 @@ export const getPublicSubject = cache(async (slug: string): Promise<{
             slug: true,
             description: true,
             order: true,
-            _count: { select: { topics: true } },
+            _count: {
+              select: {
+                topics: true,
+                questions: { where: { isPublished: true } },
+              },
+            },
           },
         },
       },
@@ -110,15 +127,18 @@ export const getPublicSubject = cache(async (slug: string): Promise<{
     const chapters = subject.chapters.map(({ _count, ...chapter }) => ({
       ...chapter,
       topicCount: _count.topics,
+      questionCount: _count.questions,
     }));
+    const { _count, ...subjectFields } = subject;
 
     return {
       source: "database",
       subject: {
-        ...subject,
+        ...subjectFields,
         chapters,
         chapterCount: chapters.length,
         topicCount: chapters.reduce((total, chapter) => total + chapter.topicCount, 0),
+        questionCount: _count.questions,
       },
     };
   } catch {

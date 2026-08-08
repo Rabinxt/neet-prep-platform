@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SubjectCard } from "@/components/subjects/subject-card";
 import { Container } from "@/components/ui/container";
+import { PageHeading } from "@/components/ui/page-heading";
 import { listPublicSubjects } from "@/server/subjects/queries";
 
 export const revalidate = 3600;
@@ -17,9 +18,11 @@ export default async function SubjectsPage() {
     <>
       <section className="border-b border-slate-200 bg-white">
         <Container className="py-14 sm:py-18">
-          <p className="text-sm font-bold uppercase tracking-wider text-green-700">NEET syllabus</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Choose a subject and start building mastery</h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">Study the complete NEET syllabus through structured chapters, focused topics, and purposeful question practice.</p>
+          <PageHeading
+            eyebrow="NEET syllabus"
+            title="Choose a subject and start building mastery"
+            description="Move through a structured hierarchy of chapters, topics, and published questions across the three NEET subjects."
+          />
         </Container>
       </section>
       <section className="py-12 sm:py-16">
@@ -31,10 +34,6 @@ export default async function SubjectsPage() {
           )}
           <div className="grid gap-6 md:grid-cols-3">
             {subjects.map((subject) => <SubjectCard key={subject.slug} subject={subject} />)}
-          </div>
-          <div className="mt-10 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center">
-            <p className="font-semibold text-slate-800">Chapter-level practice is coming next.</p>
-            <p className="mt-1 text-sm text-slate-500">This Phase 0 preview shows the planned subject experience using sample content.</p>
           </div>
         </Container>
       </section>

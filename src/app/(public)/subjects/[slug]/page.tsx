@@ -51,7 +51,7 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.chapterCount}</p><p className="mt-1 text-sm text-slate-500">Syllabus chapters</p></div>
             <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.topicCount}</p><p className="mt-1 text-sm text-slate-500">Structured topics</p></div>
-            <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.order}</p><p className="mt-1 text-sm text-slate-500">Subject display order</p></div>
+            <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.questionCount}</p><p className="mt-1 text-sm text-slate-500">Published questions</p></div>
           </div>
         </Container>
       </section>
@@ -70,14 +70,20 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
               {subject.chapters.length > 0 ? (
                 <div className="mt-6 space-y-3">
                   {subject.chapters.map((chapter, index) => (
-                    <Card key={chapter.id} className="flex items-center gap-4 p-5">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-sm font-bold text-slate-600">{String(index + 1).padStart(2, "0")}</span>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-slate-900">{chapter.name}</h3>
-                        <p className="mt-1 text-sm text-slate-500">{chapter.topicCount} {chapter.topicCount === 1 ? "topic" : "topics"}</p>
-                      </div>
-                      <ArrowRightIcon className="hidden size-5 text-slate-400 sm:block" />
-                    </Card>
+                    <Link
+                      key={chapter.id}
+                      href={`/questions?subject=${subject.slug}&chapter=${chapter.id}`}
+                      className="group block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    >
+                      <Card className="flex items-center gap-4 p-5 transition-all group-hover:-translate-y-0.5 group-hover:border-green-200 group-hover:shadow-md">
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-sm font-bold text-slate-600">{String(index + 1).padStart(2, "0")}</span>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-slate-900">{chapter.name}</h3>
+                          <p className="mt-1 text-sm text-slate-500">{chapter.topicCount} {chapter.topicCount === 1 ? "topic" : "topics"} · {chapter.questionCount} published {chapter.questionCount === 1 ? "question" : "questions"}</p>
+                        </div>
+                        <ArrowRightIcon className="hidden size-5 text-slate-400 transition-transform group-hover:translate-x-0.5 sm:block" />
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               ) : (
@@ -100,7 +106,10 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
                   ))}
                 </ul>
                 <div className="mt-6 border-t border-slate-200 pt-5">
-                  <p className="text-sm leading-6 text-slate-500">Questions, practice, and tests are deliberately outside this phase.</p>
+                  <div className="flex flex-col gap-2">
+                    <ButtonLink href={`/questions?subject=${subject.slug}`} className="w-full">Browse questions</ButtonLink>
+                    <ButtonLink href="/practice" variant="secondary" className="w-full">Build a practice set</ButtonLink>
+                  </div>
                 </div>
               </Card>
             </aside>

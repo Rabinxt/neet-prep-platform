@@ -1,0 +1,68 @@
+[
+  {
+    "id": "chemistry-atom-atomic-number-001",
+    "legacyId": "dev-question-chemistry-01",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-structure-of-atom",
+    "topicId": "chemistry-atom-atomic-number",
+    "questionText": "The atomic number of an element is equal to the number of which particles in its nucleus?",
+    "explanation": "Atomic number is defined by the number of protons in the nucleus.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Neutrons", "isCorrect": false },
+      { "label": "B", "text": "Electrons and neutrons", "isCorrect": false },
+      { "label": "C", "text": "Protons", "isCorrect": true },
+      { "label": "D", "text": "Nucleons", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-equilibrium-acids-bases-001",
+    "legacyId": "dev-question-chemistry-02",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-equilibrium",
+    "topicId": "chemistry-equilibrium-acids-bases",
+    "questionText": "At 25 degrees Celsius, the pH of a neutral aqueous solution is:",
+    "explanation": "At 25 degrees Celsius, neutral water has equal hydrogen and hydroxide ion concentrations and a pH of 7.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "0", "isCorrect": false },
+      { "label": "B", "text": "7", "isCorrect": true },
+      { "label": "C", "text": "10", "isCorrect": false },
+      { "label": "D", "text": "14", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-bonding-covalent-001",
+    "legacyId": "dev-question-chemistry-03",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-chemical-bonding",
+    "topicId": "chemistry-bonding-covalent",
+    "questionText": "A covalent bond is formed primarily by:",
+    "explanation": "A covalent bond forms when atoms share one or more pairs of electrons.",
+    "difficulty": "MEDIUM",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Transfer of neutrons", "isCorrect": false },
+      { "label": "B", "text": "Sharing of electrons", "isCorrect": true },
+      { "label": "C", "text": "Transfer of protons", "isCorrect": false },
+      { "label": "D", "text": "Sharing of nuclei", "isCorrect": false }
+    ]
+  }
+]
