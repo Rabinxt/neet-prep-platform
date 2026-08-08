@@ -1,0 +1,55 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Subject {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String
+  order       Int       @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  chapters    Chapter[]
+
+  @@index([name])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  subjectId   String
+  name        String
+  slug        String
+  description String
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topics      Topic[]
+
+  @@unique([subjectId, slug])
+  @@unique([subjectId, order])
+  @@index([subjectId, name])
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  chapterId   String
+  name        String
+  slug        String
+  description String
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([chapterId, slug])
+  @@unique([chapterId, order])
+  @@index([chapterId, name])
+}

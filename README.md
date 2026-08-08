@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NEET Prep
 
-## Getting Started
+A production-oriented NEET preparation platform built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and Prisma ORM.
 
-First, run the development server:
+The current implementation includes the public UI foundation and the academic content hierarchy (`Subject → Chapter → Topic`). Authentication, questions, practice sessions, and mock tests are intentionally not implemented yet.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Requirements
+
+- Node.js 22 or a compatible current LTS release
+- npm
+- PostgreSQL 14 or newer, either local or managed
+
+## Database environment
+
+The application requires exactly one database variable for Phase 1A:
+
+```dotenv
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copy the committed template to a local `.env` file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+Copy-Item .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then replace the placeholder value. `.env` and all other secret-bearing environment files are ignored by Git. Only `.env.example`, which contains no credentials, is committed.
 
-## Learn More
+For local PostgreSQL, a typical URL is:
 
-To learn more about Next.js, take a look at the following resources:
+```dotenv
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/neet_prep"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Local PostgreSQL normally does not require `sslmode=require`. Hosted providers commonly do; use the exact connection string supplied by your provider.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Creating PostgreSQL
 
-## Deploy on Vercel
+Choose either approach—no specific provider is required.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Local PostgreSQL
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Install PostgreSQL and ensure its service is running.
+2. Create an empty database using pgAdmin, or run:
+
+   ```powershell
+   createdb -U postgres neet_prep
+   ```
+
+3. Put the local connection URL in `.env`.
+
+### Managed PostgreSQL
+
+1. Create an empty PostgreSQL database with any managed provider.
+2. Keep the database in the same or nearest practical region as the future Vercel deployment.
+3. Copy its PostgreSQL connection string into `.env` as `DATABASE_URL`.
+4. Use a pooled application URL if the provider recommends one for serverless traffic. Confirm that the same URL supports Prisma migrations; some providers supply a separate direct URL, which can be introduced when deployment is configured.
+
+## Initial database setup
+
+After `DATABASE_URL` points to a reachable empty database:
+
+```powershell
+npm run db:validate
+npm run db:generate
+npm run db:migrate -- --name init_academic_hierarchy
+npm run db:seed
+npm run db:health
+```
+
+The seed is idempotent. It creates or updates only Physics, Chemistry, and Biology; it does not create sample chapters or topics.
+
+## Development
+
+```powershell
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Database commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run db:validate` | Validate the Prisma schema without connecting to PostgreSQL |
+| `npm run db:generate` | Generate the typed Prisma Client |
+| `npm run db:migrate -- --name <name>` | Create and apply a development migration |
+| `npm run db:migrate:deploy` | Apply committed migrations in production |
+| `npm run db:seed` | Seed the three core NEET subjects |
+| `npm run db:health` | Verify connectivity without exposing connection details |
+
+Client generation runs automatically after `npm install`. Schema validation and generation work without `DATABASE_URL`; migrations, seeding, health checks, and database-backed reads require a configured connection.
+
+When PostgreSQL is not configured or is temporarily unavailable, the public pages display the three core subjects from a small fallback catalogue. This keeps local builds functional, but it is not a replacement for applying the migration and seed in a deployed environment.
+
+## Quality checks
+
+```powershell
+npm run lint
+npm run build
+```
