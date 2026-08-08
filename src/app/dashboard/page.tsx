@@ -24,19 +24,21 @@ const nextSteps = [
 
 export default function DashboardPage() {
   return (
-    <Container className="py-8 sm:py-10">
+    <Container className="py-8 sm:py-12">
+      <div className="relative -mx-1 mb-8 overflow-hidden rounded-[1.75rem] bg-slate-950 px-6 py-8 text-white sm:px-9"><div className="study-grid absolute inset-0 opacity-50" /><div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="text-sm font-semibold text-green-700">Student dashboard</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">Good to see you. Let&apos;s make today count.</h1>
-          <p className="mt-2 text-slate-600">Your learning activity and recommendations will appear here.</p>
+          <p className="text-sm font-semibold text-emerald-400">Student dashboard</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">Good to see you. Let&apos;s make today count.</h1>
+          <p className="mt-2 text-slate-400">Your learning activity and recommendations will appear here.</p>
         </div>
-        <ButtonLink href="/subjects">Start practice <ArrowRightIcon className="size-4" /></ButtonLink>
       </div>
+      <ButtonLink href="/practice" className="shrink-0 bg-white text-slate-950 shadow-none hover:bg-emerald-50">Start practice <ArrowRightIcon className="size-4" /></ButtonLink>
+      </div></div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         {metrics.map(({ label, value, note, icon: Icon }) => (
-          <Card key={label} className="p-5">
+          <Card key={label} className="group border-0 p-5 transition hover:-translate-y-1 hover:shadow-lg">
             <div className="flex items-start justify-between gap-3">
               <div><p className="text-sm font-medium text-slate-500">{label}</p><p className="mt-2 text-3xl font-bold text-slate-950">{value}</p></div>
               <span className="grid size-10 place-items-center rounded-xl bg-slate-100 text-slate-600"><Icon className="size-5" /></span>
@@ -47,7 +49,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.5fr_0.8fr]">
-        <Card className="p-6">
+        <Card className="overflow-hidden border-0 p-6">
           <div className="flex items-center justify-between gap-4">
             <div><h2 className="text-lg font-bold text-slate-950">Suggested next steps</h2><p className="mt-1 text-sm text-slate-500">Sample content for the dashboard foundation</p></div>
             <Link href="/subjects" className="text-sm font-semibold text-green-700 hover:text-green-800">All subjects</Link>
@@ -63,7 +65,7 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        <Card className="p-6">
+        <Card className="relative overflow-hidden border-0 bg-[#eef8f3] p-6">
           <h2 className="text-lg font-bold text-slate-950">Weekly goal</h2>
           <p className="mt-1 text-sm text-slate-500">Practise consistently to build momentum.</p>
           <div className="mt-7 flex items-end justify-between"><span className="text-4xl font-bold text-slate-950">0</span><span className="mb-1 text-sm font-medium text-slate-500">of 250 questions</span></div>

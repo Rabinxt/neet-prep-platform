@@ -59,8 +59,10 @@ export default async function QuestionsPage({ searchParams }: QuestionsPageProps
 
   return (
     <>
-      <section className="border-b border-slate-200 bg-white">
-        <Container className="py-10 sm:py-12">
+      <section className="relative overflow-hidden border-b border-slate-200 bg-white">
+        <div className="study-grid absolute inset-0" />
+        <div className="absolute right-0 top-0 size-80 rounded-full bg-emerald-100/60 blur-3xl" />
+        <Container className="relative py-12 sm:py-16">
           <PageHeading
             eyebrow="Question bank"
             title="Study one question at a time"
@@ -76,7 +78,7 @@ export default async function QuestionsPage({ searchParams }: QuestionsPageProps
         </Container>
       </section>
 
-      <section className="py-8 sm:py-10">
+      <section className="py-8 sm:py-12">
         <Container>
           {source === "fallback" && (
             <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">

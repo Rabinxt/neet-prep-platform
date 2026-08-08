@@ -10,6 +10,7 @@ import { formatExamDuration, getExamDurationSeconds } from "@/lib/exam-config";
 import { cn } from "@/lib/utils";
 import { startExamAttempt } from "@/server/attempts/actions";
 import type { ActiveAttemptSummary } from "@/server/attempts/types";
+import { SubjectIcon, getSubjectTheme } from "@/components/subjects/subject-visual";
 
 export type ExamPreset = {
   id: "mixed" | "physics" | "chemistry" | "biology";
@@ -82,27 +83,32 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
         <h2 className="text-xl font-bold text-slate-950">Choose a development test</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">These tests use SAMPLE question-bank content and are not official NEET papers.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {presets.map((item) => (
+          {presets.map((item) => {
+            const tone = getSubjectTheme(item.id);
+            return (
             <button
               key={item.id}
               type="button"
               onClick={() => choosePreset(item.id)}
               aria-pressed={preset.id === item.id}
               className={cn(
-                "rounded-2xl border p-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600",
+                "group relative overflow-hidden rounded-2xl border p-5 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600",
                 preset.id === item.id
-                  ? "border-green-600 bg-green-50"
-                  : "border-slate-200 bg-white hover:border-slate-300",
+                  ? item.id === "mixed" ? "border-slate-700 bg-slate-950 text-white shadow-lg" : cn(tone.border, tone.soft, "shadow-md")
+                  : "border-slate-200 bg-white hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg",
               )}
             >
-              <div className="flex items-center justify-between gap-3">
-                <Badge tone="blue">Development SAMPLE</Badge>
-                <span className="text-sm font-semibold text-slate-500">{item.availableCount} available</span>
+              <div className="flex items-center justify-between">
+                <span className={cn("grid size-11 place-items-center rounded-xl", item.id === "mixed" ? "bg-white/10 text-emerald-300" : cn(tone.soft, tone.accent))}>{item.id === "mixed" ? <TargetIcon /> : <SubjectIcon slug={item.id} className="size-6" />}</span>
+                <span className={cn("text-xs font-bold", preset.id === item.id && item.id === "mixed" ? "text-slate-400" : "text-slate-500")}>{item.availableCount} Qs</span>
               </div>
-              <h3 className="mt-4 font-bold text-slate-950">{item.name}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+              <div className="flex items-center justify-between gap-3">
+                <Badge tone="blue" className="mt-4">Development SAMPLE</Badge>
+              </div>
+              <h3 className={cn("mt-4 font-bold", preset.id === item.id && item.id === "mixed" ? "text-white" : "text-slate-950")}>{item.name}</h3>
+              <p className={cn("mt-2 text-sm leading-6", preset.id === item.id && item.id === "mixed" ? "text-slate-400" : "text-slate-600")}>{item.description}</p>
             </button>
-          ))}
+          )})}
         </div>
 
         <fieldset className="mt-8">
@@ -123,9 +129,11 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
       </section>
 
       <aside>
-        <Card className="p-6 lg:sticky lg:top-24">
+        <Card className="overflow-hidden border-0 p-6 shadow-[0_20px_55px_rgba(15,23,42,0.10)] lg:sticky lg:top-24">
+          <div className="-mx-6 -mt-6 mb-6 bg-slate-950 px-6 py-5 text-white">
           <p className="text-xs font-bold uppercase tracking-wider text-green-700">Before you start</p>
-          <h2 className="mt-2 text-xl font-bold text-slate-950">{preset.name}</h2>
+          <h2 className="mt-2 text-xl font-bold text-white">{preset.name}</h2>
+          </div>
           <dl className="mt-6 space-y-4 text-sm">
             <div className="flex items-center justify-between gap-4"><dt className="flex items-center gap-2 text-slate-500"><TargetIcon className="size-4" />Questions</dt><dd className="font-bold text-slate-900">{actualCount}</dd></div>
             <div className="flex items-center justify-between gap-4"><dt className="flex items-center gap-2 text-slate-500"><ClockIcon className="size-4" />Duration</dt><dd className="font-bold text-slate-900">{formatExamDuration(duration)}</dd></div>

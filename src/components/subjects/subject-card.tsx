@@ -1,38 +1,47 @@
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { ArrowRightIcon, BookIcon } from "@/components/ui/icons";
+import { SubjectIcon, getSubjectTheme } from "@/components/subjects/subject-visual";
+import { ArrowRightIcon } from "@/components/ui/icons";
 import type { SubjectSummary } from "@/server/subjects/queries";
 import { cn } from "@/lib/utils";
 
-const tones: Record<string, { icon: string; badge: string }> = {
-  physics: { icon: "bg-blue-100 text-blue-700", badge: "bg-blue-50 text-blue-700" },
-  chemistry: { icon: "bg-violet-100 text-violet-700", badge: "bg-violet-50 text-violet-700" },
-  biology: { icon: "bg-green-100 text-green-700", badge: "bg-green-50 text-green-700" },
+const subjectCopy: Record<string, string> = {
+  physics: "Think in forces, fields, motion and models.",
+  chemistry: "Connect reactions, structure and periodic patterns.",
+  biology: "Decode living systems from cells to ecosystems.",
 };
 
-const defaultTone = { icon: "bg-slate-100 text-slate-700", badge: "bg-slate-100 text-slate-700" };
-
 export function SubjectCard({ subject }: { subject: SubjectSummary }) {
-  const tone = tones[subject.slug] ?? defaultTone;
+  const tone = getSubjectTheme(subject.slug);
 
   return (
-    <Card className="group flex h-full flex-col p-6 transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
-      <div className={cn("grid size-11 place-items-center rounded-xl", tone.icon)}>
-        <BookIcon />
+    <Link
+      href={`/subjects/${subject.slug}`}
+      className={cn(
+        "group relative flex min-h-[25rem] overflow-hidden rounded-[1.75rem] p-6 text-white shadow-[0_20px_50px_rgba(15,23,42,0.13)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_rgba(15,23,42,0.2)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600 sm:p-7",
+        tone.dark,
+      )}
+    >
+      <div className="dot-field absolute inset-0 opacity-30" />
+      <div className={cn("absolute -right-16 -top-16 size-48 rounded-full opacity-20 blur-3xl transition-transform duration-500 group-hover:scale-125", tone.glow)} />
+      <SubjectIcon slug={subject.slug} className="absolute -bottom-5 -right-4 size-44 rotate-[-8deg] text-white/[0.08] transition duration-500 group-hover:rotate-0 group-hover:scale-105" />
+      <div className="relative flex w-full flex-col">
+        <div className="flex items-start justify-between">
+          <span className="grid size-14 place-items-center rounded-2xl border border-white/15 bg-white/10 text-white backdrop-blur-sm"><SubjectIcon slug={subject.slug} /></span>
+          <span className="rounded-full border border-white/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/75">NEET core</span>
+        </div>
+        <div className="mt-auto pt-16">
+          <p className="text-sm font-medium text-white/60">{subjectCopy[subject.slug] ?? "Explore the structured syllabus."}</p>
+          <h3 className="mt-2 text-3xl font-bold tracking-[-0.04em]">{subject.name}</h3>
+          <p className="mt-3 max-w-[26ch] text-sm leading-6 text-white/70">{subject.description}</p>
+          <div className="mt-6 flex items-end justify-between gap-4 border-t border-white/15 pt-5">
+            <div className="flex gap-5 text-xs text-white/65">
+              <span><strong className="block text-xl text-white">{subject.chapterCount}</strong>chapters</span>
+              <span><strong className="block text-xl text-white">{subject.questionCount}</strong>questions</span>
+            </div>
+            <span className="grid size-11 place-items-center rounded-full bg-white text-slate-950 transition-transform duration-300 group-hover:translate-x-1"><ArrowRightIcon /></span>
+          </div>
+        </div>
       </div>
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <h3 className="text-xl font-bold text-slate-950">{subject.name}</h3>
-        <span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold", tone.badge)}>
-          {subject.chapterCount === 0 ? "Ready to structure" : `${subject.chapterCount} chapters`}
-        </span>
-      </div>
-      <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{subject.description}</p>
-      <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-        <span className="text-sm text-slate-500">{subject.questionCount} published {subject.questionCount === 1 ? "question" : "questions"}</span>
-        <Link href={`/subjects/${subject.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-800">
-          Explore <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
-    </Card>
+    </Link>
   );
 }

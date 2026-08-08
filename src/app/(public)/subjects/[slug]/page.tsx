@@ -5,6 +5,8 @@ import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { ArrowRightIcon, BookIcon, CheckIcon } from "@/components/ui/icons";
+import { SubjectIcon, getSubjectTheme } from "@/components/subjects/subject-visual";
+import { cn } from "@/lib/utils";
 import { getPublicSubject, listPublicSubjects } from "@/server/subjects/queries";
 
 type SubjectPageProps = { params: Promise<{ slug: string }> };
@@ -30,28 +32,33 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
   const { slug } = await params;
   const { subject, source } = await getPublicSubject(slug);
   if (!subject) notFound();
+  const tone = getSubjectTheme(subject.slug);
 
   return (
     <>
-      <section className="border-b border-slate-200 bg-white">
-        <Container className="py-12 sm:py-16">
-          <nav className="mb-8 flex items-center gap-2 text-sm text-slate-500" aria-label="Breadcrumb">
-            <Link href="/subjects" className="hover:text-green-700">Subjects</Link>
+      <section className={cn("relative overflow-hidden text-white", tone.dark)}>
+        <div className="dot-field absolute inset-0 opacity-30" />
+        <div className={cn("absolute -right-24 -top-24 size-80 rounded-full opacity-20 blur-3xl", tone.glow)} />
+        <SubjectIcon slug={subject.slug} className="absolute -bottom-24 right-[8%] size-96 rotate-[-8deg] text-white/[0.055]" />
+        <Container className="relative py-12 sm:py-20">
+          <nav className="mb-9 flex items-center gap-2 text-sm text-white/55" aria-label="Breadcrumb">
+            <Link href="/subjects" className="hover:text-white">Subjects</Link>
             <span aria-hidden="true">/</span>
-            <span className="font-medium text-slate-800">{subject.name}</span>
+            <span className="font-medium text-white">{subject.name}</span>
           </nav>
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <div className="grid size-12 place-items-center rounded-2xl bg-green-100 text-green-700"><BookIcon /></div>
-              <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">NEET {subject.name}</h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{subject.description}</p>
+              <div className="grid size-14 place-items-center rounded-2xl border border-white/15 bg-white/10 text-white"><SubjectIcon slug={subject.slug} /></div>
+              <p className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-white/55">Master the syllabus</p>
+              <h1 className="mt-2 text-5xl font-bold tracking-[-0.05em] text-white sm:text-6xl">NEET {subject.name}</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">{subject.description}</p>
             </div>
-            <ButtonLink href="#chapters" size="lg">Explore chapters <ArrowRightIcon className="size-4" /></ButtonLink>
+            <ButtonLink href="#chapters" size="lg" className="bg-white text-slate-950 shadow-none hover:bg-white/90">Explore chapters <ArrowRightIcon className="size-4" /></ButtonLink>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.chapterCount}</p><p className="mt-1 text-sm text-slate-500">Syllabus chapters</p></div>
-            <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.topicCount}</p><p className="mt-1 text-sm text-slate-500">Structured topics</p></div>
-            <div className="rounded-xl bg-slate-50 p-4"><p className="text-2xl font-bold">{subject.questionCount}</p><p className="mt-1 text-sm text-slate-500">Published questions</p></div>
+            <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.chapterCount}</p><p className="mt-1 text-sm text-white/55">Syllabus chapters</p></div>
+            <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.topicCount}</p><p className="mt-1 text-sm text-white/55">Structured topics</p></div>
+            <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.questionCount}</p><p className="mt-1 text-sm text-white/55">Published questions</p></div>
           </div>
         </Container>
       </section>
@@ -65,7 +72,8 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
           )}
           <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
             <div>
-              <h2 className="text-2xl font-bold text-slate-950">Chapters</h2>
+              <p className={cn("text-xs font-bold uppercase tracking-[0.18em]", tone.accent)}>Syllabus map</p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">Chapters</h2>
               <p className="mt-2 text-slate-600">Chapters are loaded in their configured academic order.</p>
               {subject.chapters.length > 0 ? (
                 <div className="mt-6 space-y-3">
@@ -73,16 +81,16 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
                     <Link
                       key={chapter.id}
                       href={`/questions?subject=${subject.slug}&chapter=${chapter.id}`}
-                      className="group block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                      className="group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
                     >
-                      <Card className="flex items-center gap-4 p-5 transition-all group-hover:-translate-y-0.5 group-hover:border-green-200 group-hover:shadow-md">
-                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-100 text-sm font-bold text-slate-600">{String(index + 1).padStart(2, "0")}</span>
+                      <div className={cn("flex items-center gap-4 border-b border-slate-200 bg-transparent px-2 py-5 transition-all group-hover:pl-4", tone.accent)}>
+                        <span className="w-9 shrink-0 font-mono text-xs font-bold opacity-55">{String(index + 1).padStart(2, "0")}</span>
                         <div className="min-w-0 flex-1">
                           <h3 className="font-bold text-slate-900">{chapter.name}</h3>
                           <p className="mt-1 text-sm text-slate-500">{chapter.topicCount} {chapter.topicCount === 1 ? "topic" : "topics"} · {chapter.questionCount} published {chapter.questionCount === 1 ? "question" : "questions"}</p>
                         </div>
-                        <ArrowRightIcon className="hidden size-5 text-slate-400 transition-transform group-hover:translate-x-0.5 sm:block" />
-                      </Card>
+                        <ArrowRightIcon className="hidden size-5 transition-transform group-hover:translate-x-1 sm:block" />
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -95,7 +103,7 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
               )}
             </div>
             <aside>
-              <Card className="p-6">
+              <Card className={cn("overflow-hidden border-t-4 p-6 lg:sticky lg:top-24", tone.border)}>
                 <h2 className="font-bold text-slate-950">Content structure</h2>
                 <ul className="mt-5 space-y-4">
                   {["Subject overview", "Ordered chapters", "Ordered topics"].map((area) => (

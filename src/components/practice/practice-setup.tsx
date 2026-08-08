@@ -12,6 +12,7 @@ import type { PracticeQuestionCount, PracticeTaxonomy } from "@/server/questions
 import { cn } from "@/lib/utils";
 import { startPracticeAttempt } from "@/server/attempts/actions";
 import type { ActiveAttemptSummary } from "@/server/attempts/types";
+import { SubjectIcon, getSubjectTheme } from "@/components/subjects/subject-visual";
 
 const questionCounts: Array<{ value: PracticeQuestionCount; label: string }> = [
   { value: 5, label: "5" },
@@ -67,21 +68,29 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <Container className="flex h-16 items-center justify-between">
+    <div className="min-h-screen bg-[#f7f8fc]">
+      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+        <Container className="flex h-[4.5rem] items-center justify-between">
           <BrandMark />
           <ButtonLink href="/" variant="ghost" size="sm">Back to site</ButtonLink>
         </Container>
       </header>
 
       <main>
-        <Container className="py-10 sm:py-14">
-          <div className="mx-auto max-w-3xl">
-            <div className="text-center">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-green-100 text-green-700"><TargetIcon /></span>
-              <p className="mt-5 text-sm font-bold uppercase tracking-wider text-green-700">Practice mode</p>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Build a focused practice set</h1>
+        <div className="relative overflow-hidden bg-slate-950 py-12 text-white sm:py-16">
+          <div className="study-grid absolute inset-0 opacity-60" />
+          <Container className="relative">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="mx-auto grid size-12 place-items-center rounded-2xl border border-emerald-400/25 bg-emerald-400/10 text-emerald-300"><TargetIcon /></span>
+              <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-400">Practice mode</p>
+              <h1 className="mt-3 text-4xl font-bold tracking-[-0.045em] text-white sm:text-5xl">Build a focused practice set</h1>
+              <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-300">Choose what to study and check each answer as you go. No timer, no pressure—just a tighter learning loop.</p>
+            </div>
+          </Container>
+        </div>
+        <Container className="py-8 sm:py-12">
+          <div className="mx-auto max-w-4xl">
+            <div className="sr-only">
               <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">Choose what to study and check each answer as you go. There is no timer, and progress is saved to your anonymous browser session.</p>
             </div>
 
@@ -108,7 +117,9 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
                 />
               </div>
             ) : (
-              <Card className="mt-10 p-5 sm:p-7">
+              <Card className="mt-8 overflow-hidden border-0 shadow-[0_24px_70px_rgba(15,23,42,0.10)]">
+                <div className="h-1.5 bg-[linear-gradient(90deg,#38bdf8_0_33%,#a78bfa_33%_66%,#34d399_66%)]" />
+                <div className="p-5 sm:p-8">
                 <section>
                   <div className="flex items-center gap-3">
                     <span className="grid size-9 place-items-center rounded-xl bg-slate-100 text-slate-600"><BookIcon className="size-5" /></span>
@@ -118,13 +129,16 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
                   <fieldset className="mt-5">
                     <legend className="text-sm font-semibold text-slate-700">Subject</legend>
                     <div className="mt-2 grid gap-3 sm:grid-cols-3">
-                      {taxonomy.map((item) => (
-                        <label key={item.id} className={cn("cursor-pointer rounded-xl border p-4 text-center transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-green-600", subjectId === item.id ? "border-green-600 bg-green-50 text-green-900" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300")}>
+                      {taxonomy.map((item) => {
+                        const itemTone = getSubjectTheme(item.slug);
+                        return (
+                        <label key={item.id} className={cn("group cursor-pointer rounded-2xl border p-4 text-left transition-all focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600", subjectId === item.id ? cn(itemTone.border, itemTone.soft, "shadow-sm") : "border-slate-200 bg-white text-slate-700 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")}>
                           <input type="radio" name="practice-subject" value={item.id} checked={subjectId === item.id} onChange={() => changeSubject(item.id)} className="sr-only" />
-                          <span className="font-bold">{item.name}</span>
-                          <span className="mt-1 block text-xs opacity-70">{item.chapters.length} {item.chapters.length === 1 ? "chapter" : "chapters"}</span>
+                          <span className={cn("mb-4 grid size-10 place-items-center rounded-xl", itemTone.soft, itemTone.accent)}><SubjectIcon slug={item.slug} className="size-6" /></span>
+                          <span className="font-bold text-slate-950">{item.name}</span>
+                          <span className="mt-1 block text-xs text-slate-500">{item.chapters.length} {item.chapters.length === 1 ? "chapter" : "chapters"}</span>
                         </label>
-                      ))}
+                      )})}
                     </div>
                   </fieldset>
 
@@ -180,6 +194,7 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
                 </div>
 
                 <Button type="button" size="lg" className="mt-6 w-full" disabled={isPending} onClick={startPractice}>{isPending ? "Creating saved practice..." : "Start practice"}</Button>
+                </div>
               </Card>
             )}
           </div>
