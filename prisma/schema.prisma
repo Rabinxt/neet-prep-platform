@@ -9,29 +9,31 @@ datasource db {
 }
 
 model Subject {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
-  slug        String    @unique
+  slug        String     @unique
   description String
-  order       Int       @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  order       Int        @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   chapters    Chapter[]
+  questions   Question[]
 
   @@index([name])
 }
 
 model Chapter {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   subjectId   String
   name        String
   slug        String
   description String
   order       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  subject     Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   topics      Topic[]
+  questions   Question[]
 
   @@unique([subjectId, slug])
   @@unique([subjectId, order])
@@ -39,17 +41,71 @@ model Chapter {
 }
 
 model Topic {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   chapterId   String
   name        String
   slug        String
   description String
   order       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  chapter     Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  questions   Question[]
 
   @@unique([chapterId, slug])
   @@unique([chapterId, order])
   @@index([chapterId, name])
+}
+
+model Question {
+  id            String           @id @default(cuid())
+  subjectId     String
+  chapterId     String
+  topicId       String?
+  questionText  String
+  explanation   String?
+  difficulty    Difficulty       @default(MEDIUM)
+  sourceType    QuestionSource   @default(ORIGINAL)
+  examYear      Int?
+  positiveMarks Int              @default(4)
+  negativeMarks Int              @default(1)
+  order         Int              @default(0)
+  isPublished   Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  subject       Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  chapter       Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topic         Topic?           @relation(fields: [topicId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  options       QuestionOption[]
+
+  @@index([subjectId, isPublished, difficulty])
+  @@index([chapterId, isPublished, difficulty])
+  @@index([topicId, isPublished, difficulty])
+  @@index([sourceType, examYear, isPublished])
+  @@index([chapterId, order])
+}
+
+model QuestionOption {
+  id          String   @id @default(cuid())
+  questionId  String
+  optionText  String
+  optionLabel String
+  order       Int
+  isCorrect   Boolean  @default(false)
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([questionId, optionLabel])
+  @@unique([questionId, order])
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuestionSource {
+  ORIGINAL
+  PYQ
+  SAMPLE
 }

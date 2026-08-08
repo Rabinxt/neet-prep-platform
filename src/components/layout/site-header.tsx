@@ -6,6 +6,8 @@ import { MenuIcon } from "@/components/ui/icons";
 
 const navigation = [
   { href: "/subjects", label: "Subjects" },
+  { href: "/questions", label: "Question bank" },
+  { href: "/practice", label: "Practice" },
   { href: "/mock-tests", label: "Mock tests" },
   { href: "/pyq", label: "Previous years" },
 ];
@@ -24,7 +26,7 @@ export function SiteHeader() {
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <ButtonLink href="/dashboard" variant="ghost" size="sm">Dashboard</ButtonLink>
-          <ButtonLink href="/subjects" size="sm">Start practising</ButtonLink>
+          <ButtonLink href="/practice" size="sm">Start practice</ButtonLink>
         </div>
         <details className="relative md:hidden">
           <summary className="grid size-10 cursor-pointer list-none place-items-center rounded-lg text-slate-700 hover:bg-slate-100" aria-label="Open navigation menu">

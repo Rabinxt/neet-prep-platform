@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/container";
 
 const footerLinks = [
   { href: "/subjects", label: "Subjects" },
+  { href: "/questions", label: "Question bank" },
+  { href: "/practice", label: "Practice" },
   { href: "/mock-tests", label: "Mock tests" },
   { href: "/pyq", label: "Previous years" },
   { href: "/dashboard", label: "Dashboard" },
