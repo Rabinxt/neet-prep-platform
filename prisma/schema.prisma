@@ -98,8 +98,70 @@ model AnonymousSession {
   @@index([lastSeenAt])
 }
 
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(STUDENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  attempts      Attempt[]
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
 model Attempt {
   id                   String            @id @default(cuid())
+  userId               String?
   anonymousSessionId   String?
   type                 AttemptType
   status               AttemptStatus     @default(IN_PROGRESS)
@@ -120,10 +182,12 @@ model Attempt {
   subjectBreakdown     Json?
   createdAt            DateTime          @default(now())
   updatedAt            DateTime          @updatedAt
+  user                 User?             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   anonymousSession     AnonymousSession? @relation(fields: [anonymousSessionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   questions            AttemptQuestion[]
 
   @@index([anonymousSessionId, type, status, updatedAt])
+  @@index([userId, type, status, updatedAt])
   @@index([status, expiresAt])
 }
 
@@ -224,4 +288,9 @@ enum AttemptQuestionStatus {
   ANSWERED
   MARKED_FOR_REVIEW
   ANSWERED_AND_MARKED_FOR_REVIEW
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
 }

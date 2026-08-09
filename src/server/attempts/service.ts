@@ -1,6 +1,11 @@
 import { AttemptStatus, AttemptType, Prisma } from "@/generated/prisma/client";
 import { getPrisma } from "@/server/db/client";
 import { calculateAttemptScore, type SubjectScore } from "@/server/attempts/scoring";
+import {
+  attemptOwnerData,
+  attemptOwnerWhere,
+  type AttemptOwner,
+} from "@/server/attempts/owner";
 import type {
   ActiveAttemptSummary,
   AttemptPageData,
@@ -21,7 +26,7 @@ const attemptInclude = {
 type AttemptWithQuestions = Prisma.AttemptGetPayload<{ include: typeof attemptInclude }>;
 
 export async function createPersistentAttempt(input: {
-  anonymousSessionId: string;
+  owner: AttemptOwner;
   type: "PRACTICE" | "MOCK_EXAM";
   name: string;
   questionIds: string[];
@@ -79,7 +84,7 @@ export async function createPersistentAttempt(input: {
   return prisma.$transaction(async (tx) => {
     await tx.attempt.updateMany({
       where: {
-        anonymousSessionId: input.anonymousSessionId,
+        ...attemptOwnerWhere(input.owner),
         type: input.type,
         status: "IN_PROGRESS",
       },
@@ -88,7 +93,7 @@ export async function createPersistentAttempt(input: {
 
     return tx.attempt.create({
       data: {
-        anonymousSessionId: input.anonymousSessionId,
+        ...attemptOwnerData(input.owner),
         type: input.type,
         name: input.name,
         configuration: input.configuration,
@@ -134,14 +139,14 @@ export async function createPersistentAttempt(input: {
 }
 
 export async function findActiveAttempt(
-  anonymousSessionId: string | null,
+  owner: AttemptOwner | null,
   type: "PRACTICE" | "MOCK_EXAM",
 ): Promise<ActiveAttemptSummary | null> {
-  if (!anonymousSessionId) return null;
+  if (!owner) return null;
   let attempt;
   try {
     attempt = await getPrisma().attempt.findFirst({
-      where: { anonymousSessionId, type, status: "IN_PROGRESS" },
+      where: { ...attemptOwnerWhere(owner), type, status: "IN_PROGRESS" },
       orderBy: { updatedAt: "desc" },
       select: {
         id: true,
@@ -165,11 +170,11 @@ export async function findActiveAttempt(
 }
 
 async function readOwnedAttempt(
-  anonymousSessionId: string,
+  owner: AttemptOwner,
   attemptId: string,
 ): Promise<AttemptWithQuestions | null> {
   return getPrisma().attempt.findFirst({
-    where: { id: attemptId, anonymousSessionId },
+    where: { id: attemptId, ...attemptOwnerWhere(owner) },
     include: attemptInclude,
   });
 }
@@ -343,7 +348,7 @@ async function finalizeInTransaction(
 }
 
 export async function finalizeOwnedAttempt(
-  anonymousSessionId: string,
+  owner: AttemptOwner,
   attemptId: string,
   requestedStatus: "COMPLETED" | "EXPIRED" = "COMPLETED",
   expectedType?: "PRACTICE" | "MOCK_EXAM",
@@ -351,7 +356,7 @@ export async function finalizeOwnedAttempt(
   const prisma = getPrisma();
   return prisma.$transaction(async (tx) => {
     const attempt = await tx.attempt.findFirst({
-      where: { id: attemptId, anonymousSessionId, type: expectedType },
+      where: { id: attemptId, ...attemptOwnerWhere(owner), type: expectedType },
       include: attemptInclude,
     });
     if (!attempt || attempt.status === "ABANDONED") return false;
@@ -365,11 +370,11 @@ export async function finalizeOwnedAttempt(
 }
 
 export async function loadOwnedAttempt(
-  anonymousSessionId: string | null,
+  owner: AttemptOwner | null,
   attemptId: string,
 ): Promise<AttemptPageData | null> {
-  if (!anonymousSessionId) return null;
-  let attempt = await readOwnedAttempt(anonymousSessionId, attemptId);
+  if (!owner) return null;
+  let attempt = await readOwnedAttempt(owner, attemptId);
   if (!attempt || attempt.status === AttemptStatus.ABANDONED) return null;
 
   if (
@@ -378,8 +383,8 @@ export async function loadOwnedAttempt(
     && attempt.expiresAt
     && attempt.expiresAt.getTime() <= Date.now()
   ) {
-    await finalizeOwnedAttempt(anonymousSessionId, attempt.id, "EXPIRED", "MOCK_EXAM");
-    attempt = await readOwnedAttempt(anonymousSessionId, attemptId);
+    await finalizeOwnedAttempt(owner, attempt.id, "EXPIRED", "MOCK_EXAM");
+    attempt = await readOwnedAttempt(owner, attemptId);
     if (!attempt) return null;
   }
 
@@ -390,14 +395,14 @@ export async function loadOwnedAttempt(
 
 export async function getOwnedInProgressAttempt(
   tx: Prisma.TransactionClient,
-  anonymousSessionId: string,
+  owner: AttemptOwner,
   attemptId: string,
   type: "PRACTICE" | "MOCK_EXAM",
 ) {
   return tx.attempt.findFirst({
     where: {
       id: attemptId,
-      anonymousSessionId,
+      ...attemptOwnerWhere(owner),
       type,
       status: "IN_PROGRESS",
     },

@@ -16,8 +16,8 @@ import {
   findActiveAttempt,
 } from "@/server/attempts/service";
 import {
-  getAnonymousSessionId,
-  getOrCreateAnonymousSessionId,
+  attemptOwnerWhere,
+  getCurrentAttemptOwner,
 } from "@/server/attempts/ownership";
 
 type ActionResult =
@@ -76,12 +76,13 @@ export async function startPracticeAttempt(input: {
       return { status: "invalid", message: "No published questions match this setup." };
     }
 
-    const anonymousSessionId = await getOrCreateAnonymousSessionId();
+    const owner = await getCurrentAttemptOwner({ createAnonymous: true });
+    if (!owner) throw new Error("An attempt owner could not be created.");
     const name = [subject.name, chapter?.name, topic?.name, difficulty?.toLowerCase()]
       .filter(Boolean)
       .join(" · ");
     const attempt = await createPersistentAttempt({
-      anonymousSessionId,
+      owner,
       type: "PRACTICE",
       name: name || "Custom practice",
       questionIds: questions.map((question) => question.id),
@@ -117,10 +118,11 @@ export async function startExamAttempt(input: {
   }
 
   try {
-    const anonymousSessionId = await getOrCreateAnonymousSessionId();
-    const active = await findActiveAttempt(anonymousSessionId, "MOCK_EXAM");
+    const owner = await getCurrentAttemptOwner({ createAnonymous: true });
+    if (!owner) throw new Error("An attempt owner could not be created.");
+    const active = await findActiveAttempt(owner, "MOCK_EXAM");
     if (active?.expiresAt && new Date(active.expiresAt).getTime() <= Date.now()) {
-      await finalizeOwnedAttempt(anonymousSessionId, active.id, "EXPIRED", "MOCK_EXAM");
+      await finalizeOwnedAttempt(owner, active.id, "EXPIRED", "MOCK_EXAM");
     }
     const questions = await listExamQuestions({
       subjectSlug: configuration.subjectSlug,
@@ -130,7 +132,7 @@ export async function startExamAttempt(input: {
       return { status: "invalid", message: "No published questions match this test." };
     }
     const attempt = await createPersistentAttempt({
-      anonymousSessionId,
+      owner,
       type: "MOCK_EXAM",
       name: configuration.name,
       questionIds: questions.map((question) => question.id),
@@ -157,8 +159,8 @@ export async function savePracticeSelection(input: {
   ) {
     return { status: "invalid", message: "The practice response is invalid." };
   }
-  const anonymousSessionId = await getAnonymousSessionId();
-  if (!anonymousSessionId) return { status: "invalid", message: "This practice session is unavailable." };
+  const owner = await getCurrentAttemptOwner({ createAnonymous: false });
+  if (!owner) return { status: "invalid", message: "This practice session is unavailable." };
 
   try {
     const saved = await getPrisma().$transaction(async (tx) => {
@@ -166,7 +168,7 @@ export async function savePracticeSelection(input: {
         where: {
           id: input.questionId,
           attemptId: input.attemptId,
-          attempt: { anonymousSessionId, type: "PRACTICE", status: "IN_PROGRESS" },
+          attempt: { ...attemptOwnerWhere(owner), type: "PRACTICE", status: "IN_PROGRESS" },
         },
         select: {
           id: true,
@@ -211,8 +213,8 @@ export async function checkPracticeAnswer(input: {
   if (!isSafeIdentifier(input.attemptId) || !isSafeIdentifier(input.questionId)) {
     return { status: "invalid", message: "The practice response is invalid." };
   }
-  const anonymousSessionId = await getAnonymousSessionId();
-  if (!anonymousSessionId) return { status: "invalid", message: "This practice session is unavailable." };
+  const owner = await getCurrentAttemptOwner({ createAnonymous: false });
+  if (!owner) return { status: "invalid", message: "This practice session is unavailable." };
 
   try {
     return await getPrisma().$transaction(async (tx) => {
@@ -220,7 +222,7 @@ export async function checkPracticeAnswer(input: {
         where: {
           id: input.questionId,
           attemptId: input.attemptId,
-          attempt: { anonymousSessionId, type: "PRACTICE", status: "IN_PROGRESS" },
+          attempt: { ...attemptOwnerWhere(owner), type: "PRACTICE", status: "IN_PROGRESS" },
         },
         include: { options: true },
       });
@@ -271,8 +273,8 @@ export async function saveExamResponse(input: {
   ) {
     return { status: "invalid", message: "The exam response is invalid." };
   }
-  const anonymousSessionId = await getAnonymousSessionId();
-  if (!anonymousSessionId) return { status: "invalid", message: "This exam session is unavailable." };
+  const owner = await getCurrentAttemptOwner({ createAnonymous: false });
+  if (!owner) return { status: "invalid", message: "This exam session is unavailable." };
 
   try {
     const outcome = await getPrisma().$transaction(async (tx) => {
@@ -280,7 +282,7 @@ export async function saveExamResponse(input: {
         where: {
           id: input.questionId,
           attemptId: input.attemptId,
-          attempt: { anonymousSessionId, type: "MOCK_EXAM", status: "IN_PROGRESS" },
+          attempt: { ...attemptOwnerWhere(owner), type: "MOCK_EXAM", status: "IN_PROGRESS" },
         },
         select: {
           id: true,
@@ -327,7 +329,7 @@ export async function saveExamResponse(input: {
       return "saved" as const;
     });
     if (outcome === "expired") {
-      await finalizeOwnedAttempt(anonymousSessionId, input.attemptId, "EXPIRED", "MOCK_EXAM");
+      await finalizeOwnedAttempt(owner, input.attemptId, "EXPIRED", "MOCK_EXAM");
       return { status: "completed", attemptId: input.attemptId };
     }
     return outcome === "saved"
@@ -346,13 +348,13 @@ export async function setAttemptCurrentQuestion(input: {
   if (!isSafeIdentifier(input.attemptId) || !Number.isInteger(input.currentIndex)) {
     return { status: "invalid", message: "The requested question is invalid." };
   }
-  const anonymousSessionId = await getAnonymousSessionId();
-  if (!anonymousSessionId) return { status: "invalid", message: "This attempt is unavailable." };
+  const owner = await getCurrentAttemptOwner({ createAnonymous: false });
+  if (!owner) return { status: "invalid", message: "This attempt is unavailable." };
   try {
     const attempt = await getPrisma().attempt.findFirst({
       where: {
         id: input.attemptId,
-        anonymousSessionId,
+        ...attemptOwnerWhere(owner),
         type: input.type,
         status: "IN_PROGRESS",
       },
@@ -360,7 +362,7 @@ export async function setAttemptCurrentQuestion(input: {
     });
     if (!attempt) return { status: "invalid", message: "This attempt is unavailable." };
     if (input.type === "MOCK_EXAM" && attempt.expiresAt && attempt.expiresAt.getTime() <= Date.now()) {
-      await finalizeOwnedAttempt(anonymousSessionId, input.attemptId, "EXPIRED", "MOCK_EXAM");
+      await finalizeOwnedAttempt(owner, input.attemptId, "EXPIRED", "MOCK_EXAM");
       return { status: "completed", attemptId: input.attemptId };
     }
     const currentIndex = Math.min(Math.max(input.currentIndex, 0), attempt.totalQuestions - 1);
@@ -384,11 +386,11 @@ export async function finishAttempt(input: {
   if (!isSafeIdentifier(input.attemptId)) {
     return { status: "invalid", message: "This attempt is invalid." };
   }
-  const anonymousSessionId = await getAnonymousSessionId();
-  if (!anonymousSessionId) return { status: "invalid", message: "This attempt is unavailable." };
+  const owner = await getCurrentAttemptOwner({ createAnonymous: false });
+  if (!owner) return { status: "invalid", message: "This attempt is unavailable." };
   try {
     const finalized = await finalizeOwnedAttempt(
-      anonymousSessionId,
+      owner,
       input.attemptId,
       "COMPLETED",
       input.type,

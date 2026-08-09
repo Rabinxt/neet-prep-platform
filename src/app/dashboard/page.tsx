@@ -4,6 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { ArrowRightIcon, BookIcon, ChartIcon, ClockIcon, TargetIcon } from "@/components/ui/icons";
+import { requireUser } from "@/server/auth/session";
 
 export const metadata: Metadata = {
   title: "Student Dashboard",
@@ -22,15 +23,17 @@ const nextSteps = [
   { subject: "Biology", task: "Revise Human Physiology", detail: "Sample study recommendation", href: "/subjects/biology", tone: "bg-green-100 text-green-700" },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await requireUser("/dashboard");
+  const firstName = user.name.trim().split(/\s+/)[0] || "there";
   return (
     <Container className="py-8 sm:py-12">
       <div className="relative -mx-1 mb-8 overflow-hidden rounded-[1.75rem] bg-slate-950 px-6 py-8 text-white sm:px-9"><div className="study-grid absolute inset-0 opacity-50" /><div className="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="text-sm font-semibold text-emerald-400">Student dashboard</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">Good to see you. Let&apos;s make today count.</h1>
-          <p className="mt-2 text-slate-400">Your learning activity and recommendations will appear here.</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">Good to see you, {firstName}. Let&apos;s make today count.</h1>
+          <p className="mt-2 text-slate-400">Signed in as {user.email}. Your account is ready; your performance dashboard is coming next.</p>
         </div>
       </div>
       <ButtonLink href="/practice" className="shrink-0 bg-white text-slate-950 shadow-none hover:bg-emerald-50">Start practice <ArrowRightIcon className="size-4" /></ButtonLink>
@@ -72,7 +75,7 @@ export default function DashboardPage() {
           <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full w-0 rounded-full bg-green-600" /></div>
           <div className="mt-7 rounded-xl bg-green-50 p-4">
             <p className="text-sm font-semibold text-green-900">Your progress starts here</p>
-            <p className="mt-1 text-xs leading-5 text-green-800">Activity tracking will become active when practice sessions are introduced.</p>
+            <p className="mt-1 text-xs leading-5 text-green-800">Performance analytics will become active in a future phase.</p>
           </div>
         </Card>
       </div>

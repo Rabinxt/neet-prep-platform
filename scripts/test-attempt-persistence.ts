@@ -27,8 +27,10 @@ try {
   sessionIds.push(ownerA.id, ownerB.id);
 
   const orderedIds = questions.map((question) => question.id).reverse();
+  const ownerAIdentity = { kind: "anonymous" as const, anonymousSessionId: ownerA.id };
+  const ownerBIdentity = { kind: "anonymous" as const, anonymousSessionId: ownerB.id };
   const attempt = await createPersistentAttempt({
-    anonymousSessionId: ownerA.id,
+    owner: ownerAIdentity,
     type: "MOCK_EXAM",
     name: "Persistence integration test",
     questionIds: orderedIds,
@@ -37,7 +39,7 @@ try {
   });
   attemptIds.push(attempt.id);
 
-  const active = await loadOwnedAttempt(ownerA.id, attempt.id);
+  const active = await loadOwnedAttempt(ownerAIdentity, attempt.id);
   assert(active?.status === "IN_PROGRESS");
   assert.deepEqual(
     active.questions.map((question) => question.subject.slug.length > 0),
@@ -46,7 +48,7 @@ try {
   const serializedActive = JSON.stringify(active);
   assert(!serializedActive.includes("isCorrect"), "Active exam payload exposed correctness.");
   assert(!serializedActive.includes("explanation"), "Active exam payload exposed explanations.");
-  assert.equal(await loadOwnedAttempt(ownerB.id, attempt.id), null, "Another owner could read the attempt.");
+  assert.equal(await loadOwnedAttempt(ownerBIdentity, attempt.id), null, "Another owner could read the attempt.");
 
   const firstSnapshot = await prisma.attemptQuestion.findFirstOrThrow({
     where: { attemptId: attempt.id, order: 1 },
@@ -60,21 +62,21 @@ try {
       responseStatus: "ANSWERED",
     },
   });
-  const resumed = await loadOwnedAttempt(ownerA.id, attempt.id);
+  const resumed = await loadOwnedAttempt(ownerAIdentity, attempt.id);
   assert(resumed?.status === "IN_PROGRESS");
   assert.equal(resumed.questions[0].selectedOptionId, firstSnapshot.options[0].id);
 
-  await finalizeOwnedAttempt(ownerA.id, attempt.id);
-  const completed = await loadOwnedAttempt(ownerA.id, attempt.id);
+  await finalizeOwnedAttempt(ownerAIdentity, attempt.id);
+  const completed = await loadOwnedAttempt(ownerAIdentity, attempt.id);
   assert(completed?.status === "COMPLETED");
   const firstScore = completed.overall.score;
-  await finalizeOwnedAttempt(ownerA.id, attempt.id);
-  const duplicate = await loadOwnedAttempt(ownerA.id, attempt.id);
+  await finalizeOwnedAttempt(ownerAIdentity, attempt.id);
+  const duplicate = await loadOwnedAttempt(ownerAIdentity, attempt.id);
   assert(duplicate?.status === "COMPLETED");
   assert.equal(duplicate.overall.score, firstScore, "Duplicate finalization changed the score.");
 
   const expiring = await createPersistentAttempt({
-    anonymousSessionId: ownerA.id,
+    owner: ownerAIdentity,
     type: "MOCK_EXAM",
     name: "Expiry integration test",
     questionIds: orderedIds,
@@ -86,7 +88,7 @@ try {
     where: { id: expiring.id },
     data: { expiresAt: new Date(Date.now() - 1_000) },
   });
-  const expired = await loadOwnedAttempt(ownerA.id, expiring.id);
+  const expired = await loadOwnedAttempt(ownerAIdentity, expiring.id);
   assert(expired?.status === "EXPIRED", "Expired attempt was not finalized on load.");
 
   console.info("Attempt persistence integration checks passed.");

@@ -91,7 +91,7 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
         <Container className="py-8 sm:py-12">
           <div className="mx-auto max-w-4xl">
             <div className="sr-only">
-              <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">Choose what to study and check each answer as you go. There is no timer, and progress is saved to your anonymous browser session.</p>
+              <p className="mx-auto mt-3 max-w-2xl leading-7 text-slate-600">Choose what to study and check each answer as you go. There is no timer, and progress is saved to your current browser or student account.</p>
             </div>
 
             {activeAttempt && (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PracticeSetup } from "@/components/practice/practice-setup";
-import { getAnonymousSessionId } from "@/server/attempts/ownership";
+import { getCurrentAttemptOwner } from "@/server/attempts/ownership";
 import { findActiveAttempt } from "@/server/attempts/service";
 import { listPracticeTaxonomy } from "@/server/questions/queries";
 
@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function PracticePage() {
-  const [taxonomy, anonymousSessionId] = await Promise.all([
+  const [taxonomy, owner] = await Promise.all([
     listPracticeTaxonomy(),
-    getAnonymousSessionId(),
+    getCurrentAttemptOwner({ createAnonymous: false }),
   ]);
-  const activeAttempt = await findActiveAttempt(anonymousSessionId, "PRACTICE");
+  const activeAttempt = await findActiveAttempt(owner, "PRACTICE");
   return <PracticeSetup taxonomy={taxonomy} activeAttempt={activeAttempt} />;
 }

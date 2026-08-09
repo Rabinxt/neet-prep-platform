@@ -3,7 +3,7 @@ import { MockTestSetup, type ExamPreset } from "@/components/exam/mock-test-setu
 import { Container } from "@/components/ui/container";
 import { PageHeading } from "@/components/ui/page-heading";
 import { listPublishedQuestions } from "@/server/questions/queries";
-import { getAnonymousSessionId } from "@/server/attempts/ownership";
+import { getCurrentAttemptOwner } from "@/server/attempts/ownership";
 import { findActiveAttempt } from "@/server/attempts/service";
 
 export const metadata: Metadata = {
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function MockTestsPage() {
-  const [questions, anonymousSessionId] = await Promise.all([
+  const [questions, owner] = await Promise.all([
     listPublishedQuestions({ limit: null }),
-    getAnonymousSessionId(),
+    getCurrentAttemptOwner({ createAnonymous: false }),
   ]);
-  const activeAttempt = await findActiveAttempt(anonymousSessionId, "MOCK_EXAM");
+  const activeAttempt = await findActiveAttempt(owner, "MOCK_EXAM");
   const presetDefinitions: Array<Pick<ExamPreset, "id" | "name" | "description"> & { subjectSlug?: string }> = [
     { id: "mixed", name: "Full Mixed Development Test", description: "A balanced selection from every subject currently available." },
     { id: "physics", name: "Physics Development Test", description: "A focused timed test using published Physics samples.", subjectSlug: "physics" },
@@ -51,7 +51,7 @@ export default async function MockTestsPage() {
           <PageHeading
             eyebrow="Exam mode MVP"
             title="Practise making decisions under time pressure"
-            description="Build a timed exam from the published development bank. Responses and results are saved anonymously and evaluated securely."
+            description="Build a timed exam from the published development bank. Responses are saved to your current browser or student account and evaluated securely."
           />
         </Container>
       </section>
