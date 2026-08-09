@@ -64,5 +64,194 @@
       { "label": "C", "text": "Eight times", "isCorrect": false },
       { "label": "D", "text": "Unchanged", "isCorrect": false }
     ]
+  },
+  {
+    "id": "physics-motion-kinematics-001",
+    "subjectId": "physics",
+    "chapterId": "physics-motion-straight-line",
+    "topicId": "physics-motion-kinematics",
+    "questionText": "A car travels 120 m in 6 s along a straight road at uniform speed. What is its speed?",
+    "explanation": "For uniform motion, speed equals distance divided by time: 120 m / 6 s = 20 m/s.",
+    "difficulty": "EASY",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "10 m/s", "isCorrect": false },
+      { "label": "B", "text": "20 m/s", "isCorrect": true },
+      { "label": "C", "text": "24 m/s", "isCorrect": false },
+      { "label": "D", "text": "720 m/s", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-motion-graphs-001",
+    "subjectId": "physics",
+    "chapterId": "physics-motion-straight-line",
+    "topicId": "physics-motion-graphs",
+    "questionText": "The velocity of an object increases uniformly from 0 to 20 m/s in 5 s. What displacement does the velocity-time graph represent during this interval?",
+    "explanation": "Displacement is the area under the velocity-time graph. The area is a triangle: (1/2) x 5 s x 20 m/s = 50 m.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "25 m", "isCorrect": false },
+      { "label": "B", "text": "50 m", "isCorrect": true },
+      { "label": "C", "text": "100 m", "isCorrect": false },
+      { "label": "D", "text": "125 m", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-laws-friction-001",
+    "subjectId": "physics",
+    "chapterId": "physics-laws-of-motion",
+    "topicId": "physics-laws-friction",
+    "questionText": "A 5 kg block rests on a horizontal surface with coefficient of static friction 0.20. Taking g = 10 m/s^2, what is the limiting friction?",
+    "explanation": "The normal reaction is mg = 50 N. Limiting friction is mu_s N = 0.20 x 50 N = 10 N.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "2 N", "isCorrect": false },
+      { "label": "B", "text": "5 N", "isCorrect": false },
+      { "label": "C", "text": "10 N", "isCorrect": true },
+      { "label": "D", "text": "50 N", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-laws-impulse-001",
+    "subjectId": "physics",
+    "chapterId": "physics-laws-of-motion",
+    "topicId": "physics-laws-impulse",
+    "questionText": "A 0.20 kg ball moving east at 10 m/s rebounds west at 5 m/s. What is the magnitude of the impulse delivered to the ball?",
+    "explanation": "Taking east as positive, the change in velocity is -5 - 10 = -15 m/s. The impulse magnitude is m|delta v| = 0.20 x 15 = 3 N s.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "1 N s", "isCorrect": false },
+      { "label": "B", "text": "2 N s", "isCorrect": false },
+      { "label": "C", "text": "3 N s", "isCorrect": true },
+      { "label": "D", "text": "5 N s", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-work-power-001",
+    "subjectId": "physics",
+    "chapterId": "physics-work-energy-power",
+    "topicId": "physics-work-power",
+    "questionText": "A machine performs 600 J of work in 3 s. What is its average power?",
+    "explanation": "Average power is work divided by time: 600 J / 3 s = 200 W.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "100 W", "isCorrect": false },
+      { "label": "B", "text": "200 W", "isCorrect": true },
+      { "label": "C", "text": "600 W", "isCorrect": false },
+      { "label": "D", "text": "1800 W", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-work-potential-energy-001",
+    "subjectId": "physics",
+    "chapterId": "physics-work-energy-power",
+    "topicId": "physics-work-potential-energy",
+    "questionText": "A 2 kg object is raised vertically through 5 m near Earth's surface. Taking g = 10 m/s^2, what is the increase in its gravitational potential energy?",
+    "explanation": "The increase in gravitational potential energy is mgh = 2 kg x 10 m/s^2 x 5 m = 100 J.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "20 J", "isCorrect": false },
+      { "label": "B", "text": "50 J", "isCorrect": false },
+      { "label": "C", "text": "100 J", "isCorrect": true },
+      { "label": "D", "text": "250 J", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-gravitation-orbits-001",
+    "subjectId": "physics",
+    "chapterId": "physics-gravitation",
+    "topicId": "physics-gravitation-orbits",
+    "questionText": "A satellite moves in a circular orbit of radius r around a planet. If it is moved to a circular orbit of radius 4r, how does its orbital speed change?",
+    "explanation": "For a circular orbit, v = sqrt(GM/r), so speed is inversely proportional to the square root of orbital radius. Increasing the radius to 4r reduces the speed to one-half.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "It becomes one-fourth", "isCorrect": false },
+      { "label": "B", "text": "It becomes one-half", "isCorrect": true },
+      { "label": "C", "text": "It doubles", "isCorrect": false },
+      { "label": "D", "text": "It remains unchanged", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-current-circuits-001",
+    "subjectId": "physics",
+    "chapterId": "physics-current-electricity",
+    "topicId": "physics-current-circuits",
+    "questionText": "Two 6 ohm resistors are connected in parallel, and this combination is connected in series with another 6 ohm resistor. What is the equivalent resistance?",
+    "explanation": "Two equal 6 ohm resistors in parallel have equivalent resistance 3 ohm. Adding the series 6 ohm resistor gives 3 + 6 = 9 ohm.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "2 ohm", "isCorrect": false },
+      { "label": "B", "text": "3 ohm", "isCorrect": false },
+      { "label": "C", "text": "9 ohm", "isCorrect": true },
+      { "label": "D", "text": "18 ohm", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "physics-current-cells-001",
+    "subjectId": "physics",
+    "chapterId": "physics-current-electricity",
+    "topicId": "physics-current-cells",
+    "questionText": "A cell of emf 12 V and internal resistance 2 ohm is connected to a 4 ohm resistor. What is the terminal voltage of the cell while current flows?",
+    "explanation": "The current is I = E/(R + r) = 12/(4 + 2) = 2 A. Terminal voltage is E - Ir = 12 - (2 x 2) = 8 V, also equal to IR across the external resistor.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "4 V", "isCorrect": false },
+      { "label": "B", "text": "6 V", "isCorrect": false },
+      { "label": "C", "text": "8 V", "isCorrect": true },
+      { "label": "D", "text": "12 V", "isCorrect": false }
+    ]
   }
 ]

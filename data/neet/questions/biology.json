@@ -64,5 +64,194 @@
       { "label": "C", "text": "Vacuole", "isCorrect": false },
       { "label": "D", "text": "Cell wall", "isCorrect": false }
     ]
+  },
+  {
+    "id": "biology-cell-membrane-001",
+    "subjectId": "biology",
+    "chapterId": "biology-cell-unit-of-life",
+    "topicId": "biology-cell-membrane",
+    "questionText": "What is an important role of cholesterol in an animal cell membrane?",
+    "explanation": "Cholesterol fits between phospholipids and buffers membrane fluidity, reducing excessive fluidity at high temperature and preventing tight packing at low temperature.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "It stores genetic information", "isCorrect": false },
+      { "label": "B", "text": "It regulates membrane fluidity", "isCorrect": true },
+      { "label": "C", "text": "It synthesises ribosomal RNA", "isCorrect": false },
+      { "label": "D", "text": "It forms cellulose fibres", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-biomolecules-enzymes-001",
+    "subjectId": "biology",
+    "chapterId": "biology-biomolecules",
+    "topicId": "biology-biomolecules-enzymes",
+    "questionText": "Why does the activity of many human enzymes fall sharply at temperatures far above 37 degrees Celsius?",
+    "explanation": "High temperature can disrupt the weak interactions maintaining a protein's three-dimensional structure. Denaturation changes the active site and reduces catalytic activity.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "The substrate gains genetic material", "isCorrect": false },
+      { "label": "B", "text": "The enzyme is converted into a lipid", "isCorrect": false },
+      { "label": "C", "text": "The enzyme's active-site structure is disrupted", "isCorrect": true },
+      { "label": "D", "text": "All molecular collisions stop", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-cell-cycle-mitosis-001",
+    "subjectId": "biology",
+    "chapterId": "biology-cell-cycle-division",
+    "topicId": "biology-cell-cycle-mitosis",
+    "questionText": "During which stage of mitosis do chromosomes align at the equatorial plate?",
+    "explanation": "During metaphase, spindle fibres attach to kinetochores and the condensed chromosomes align at the cell's equatorial plate.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Prophase", "isCorrect": false },
+      { "label": "B", "text": "Metaphase", "isCorrect": true },
+      { "label": "C", "text": "Anaphase", "isCorrect": false },
+      { "label": "D", "text": "Telophase", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-cell-cycle-dna-content-001",
+    "subjectId": "biology",
+    "chapterId": "biology-cell-cycle-division",
+    "topicId": "biology-cell-cycle-dna-content",
+    "questionText": "A diploid somatic cell in G1 has chromosome number 2n and DNA content 2C. What are these values immediately after completion of S phase?",
+    "explanation": "DNA replicates during S phase, so DNA content doubles from 2C to 4C. Sister chromatids remain joined and are counted as one chromosome each, so chromosome number remains 2n.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "2n chromosomes and 4C DNA", "isCorrect": true },
+      { "label": "B", "text": "4n chromosomes and 4C DNA", "isCorrect": false },
+      { "label": "C", "text": "n chromosomes and 2C DNA", "isCorrect": false },
+      { "label": "D", "text": "4n chromosomes and 2C DNA", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-reproduction-fertilisation-001",
+    "subjectId": "biology",
+    "chapterId": "biology-human-reproduction",
+    "topicId": "biology-reproduction-fertilisation",
+    "questionText": "In humans, fertilisation normally occurs at which location in the female reproductive tract?",
+    "explanation": "Human fertilisation normally occurs near the ampullary-isthmic junction of the fallopian tube, where the ovum and sperm may meet.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Cervix", "isCorrect": false },
+      { "label": "B", "text": "Uterine cavity", "isCorrect": false },
+      { "label": "C", "text": "Ampullary-isthmic junction", "isCorrect": true },
+      { "label": "D", "text": "Vagina", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-photosynthesis-carbon-fixation-001",
+    "subjectId": "biology",
+    "chapterId": "biology-photosynthesis",
+    "topicId": "biology-photosynthesis-carbon-fixation",
+    "questionText": "In a chloroplast, where do the enzyme-controlled reactions of the Calvin cycle occur?",
+    "explanation": "The Calvin cycle occurs in the chloroplast stroma, which contains the enzymes required for carbon fixation and carbohydrate formation.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Thylakoid lumen", "isCorrect": false },
+      { "label": "B", "text": "Granal membrane", "isCorrect": false },
+      { "label": "C", "text": "Chloroplast stroma", "isCorrect": true },
+      { "label": "D", "text": "Intermembrane space", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-photosynthesis-carbon-fixation-002",
+    "subjectId": "biology",
+    "chapterId": "biology-photosynthesis",
+    "topicId": "biology-photosynthesis-carbon-fixation",
+    "questionText": "Which pair correctly identifies the primary carbon dioxide acceptor and the first stable product in the mesophyll cells of a C4 plant?",
+    "explanation": "In C4 mesophyll cells, phosphoenolpyruvate (PEP) accepts carbon dioxide through PEP carboxylase, producing the four-carbon compound oxaloacetate as the first stable product.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 2,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "RuBP and 3-phosphoglycerate", "isCorrect": false },
+      { "label": "B", "text": "PEP and oxaloacetate", "isCorrect": true },
+      { "label": "C", "text": "Pyruvate and malate", "isCorrect": false },
+      { "label": "D", "text": "Oxaloacetate and PEP", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-inheritance-mendelian-crosses-001",
+    "subjectId": "biology",
+    "chapterId": "biology-inheritance-variation",
+    "topicId": "biology-inheritance-mendelian-crosses",
+    "questionText": "A heterozygous tall pea plant (Tt) is crossed with a dwarf plant (tt). What phenotypic ratio is expected among the offspring?",
+    "explanation": "The heterozygote produces T and t gametes equally, while the dwarf parent produces only t gametes. The offspring are half Tt (tall) and half tt (dwarf), giving a 1:1 ratio.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "All tall", "isCorrect": false },
+      { "label": "B", "text": "3 tall : 1 dwarf", "isCorrect": false },
+      { "label": "C", "text": "1 tall : 1 dwarf", "isCorrect": true },
+      { "label": "D", "text": "All dwarf", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "biology-inheritance-mendelian-crosses-002",
+    "subjectId": "biology",
+    "chapterId": "biology-inheritance-variation",
+    "topicId": "biology-inheritance-mendelian-crosses",
+    "questionText": "In a self-cross of AaBb, assuming independent assortment and complete dominance, what is the probability of an offspring with genotype aabb?",
+    "explanation": "For Aa x Aa, the probability of aa is 1/4. Independently, Bb x Bb gives bb with probability 1/4. Multiplying gives 1/4 x 1/4 = 1/16.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 2,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "1/4", "isCorrect": false },
+      { "label": "B", "text": "1/8", "isCorrect": false },
+      { "label": "C", "text": "1/16", "isCorrect": true },
+      { "label": "D", "text": "3/16", "isCorrect": false }
+    ]
   }
 ]

@@ -168,7 +168,7 @@ try {
         },
       });
     }
-  }, { timeout: 30_000 });
+  }, { timeout: 120_000 });
 
   console.info(
     `Imported ${bundle.subjects.length} subjects, ${bundle.chapters.length} chapters, ${bundle.topics.length} topics, and ${bundle.questions.length} questions.`,

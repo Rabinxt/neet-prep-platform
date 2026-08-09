@@ -64,5 +64,194 @@
       { "label": "C", "text": "Transfer of protons", "isCorrect": false },
       { "label": "D", "text": "Sharing of nuclei", "isCorrect": false }
     ]
+  },
+  {
+    "id": "chemistry-basic-mole-concept-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-basic-concepts",
+    "topicId": "chemistry-basic-mole-concept",
+    "questionText": "The molar mass of water is 18 g/mol. How many moles are present in 36 g of water?",
+    "explanation": "Amount in moles equals given mass divided by molar mass: 36 g / 18 g/mol = 2 mol.",
+    "difficulty": "EASY",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "0.5 mol", "isCorrect": false },
+      { "label": "B", "text": "1 mol", "isCorrect": false },
+      { "label": "C", "text": "2 mol", "isCorrect": true },
+      { "label": "D", "text": "18 mol", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-atom-electronic-configuration-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-structure-of-atom",
+    "topicId": "chemistry-atom-electronic-configuration",
+    "questionText": "Which shell-wise electronic configuration represents a neutral sodium atom with atomic number 11?",
+    "explanation": "A neutral sodium atom has 11 electrons. They are distributed among its shells as 2, 8, and 1.",
+    "difficulty": "EASY",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "2, 7, 2", "isCorrect": false },
+      { "label": "B", "text": "2, 8, 1", "isCorrect": true },
+      { "label": "C", "text": "2, 8, 2", "isCorrect": false },
+      { "label": "D", "text": "2, 9", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-atom-isotopes-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-structure-of-atom",
+    "topicId": "chemistry-atom-isotopes",
+    "questionText": "An element has two isotopes of mass numbers 35 and 37 with abundances 75% and 25%, respectively. What is its average atomic mass?",
+    "explanation": "The weighted average is (35 x 0.75) + (37 x 0.25) = 26.25 + 9.25 = 35.5 u.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "35.0 u", "isCorrect": false },
+      { "label": "B", "text": "35.5 u", "isCorrect": true },
+      { "label": "C", "text": "36.0 u", "isCorrect": false },
+      { "label": "D", "text": "36.5 u", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-equilibrium-le-chatelier-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-equilibrium",
+    "topicId": "chemistry-equilibrium-le-chatelier",
+    "questionText": "For the exothermic equilibrium N2(g) + 3H2(g) <=> 2NH3(g), what is the effect of lowering the temperature at constant pressure?",
+    "explanation": "Heat behaves as a product in an exothermic reaction. Lowering temperature favours the direction that releases heat, so equilibrium shifts toward ammonia.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "It shifts toward N2 and H2", "isCorrect": false },
+      { "label": "B", "text": "It shifts toward NH3", "isCorrect": true },
+      { "label": "C", "text": "The equilibrium constant becomes zero", "isCorrect": false },
+      { "label": "D", "text": "There is no effect on equilibrium composition", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-bonding-molecular-geometry-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-chemical-bonding",
+    "topicId": "chemistry-bonding-molecular-geometry",
+    "questionText": "According to VSEPR theory, what is the molecular shape of NH3?",
+    "explanation": "Nitrogen in NH3 has three bond pairs and one lone pair. The electron-pair geometry is tetrahedral, while the molecular shape is trigonal pyramidal.",
+    "difficulty": "MEDIUM",
+    "sourceType": "SAMPLE",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Linear", "isCorrect": false },
+      { "label": "B", "text": "Trigonal planar", "isCorrect": false },
+      { "label": "C", "text": "Trigonal pyramidal", "isCorrect": true },
+      { "label": "D", "text": "Square planar", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-thermodynamics-hess-law-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-thermodynamics",
+    "topicId": "chemistry-thermodynamics-hess-law",
+    "questionText": "Given C(s) + O2(g) -> CO2(g), delta H = -394 kJ/mol, and CO(g) + 1/2 O2(g) -> CO2(g), delta H = -283 kJ/mol, what is delta H for C(s) + 1/2 O2(g) -> CO(g)?",
+    "explanation": "Subtracting the oxidation of CO from the combustion of carbon gives the target reaction. Therefore delta H = -394 - (-283) = -111 kJ/mol.",
+    "difficulty": "MEDIUM",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "-677 kJ/mol", "isCorrect": false },
+      { "label": "B", "text": "-111 kJ/mol", "isCorrect": true },
+      { "label": "C", "text": "+111 kJ/mol", "isCorrect": false },
+      { "label": "D", "text": "+677 kJ/mol", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-equilibrium-constant-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-equilibrium",
+    "topicId": "chemistry-equilibrium-constant",
+    "questionText": "For the reaction A <=> B, the equilibrium constant is 4. What is the equilibrium constant for 2B <=> 2A at the same temperature?",
+    "explanation": "Reversing the reaction changes K to 1/4. Multiplying all coefficients of that reversed reaction by 2 raises the constant to the second power: (1/4)^2 = 1/16.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "1/16", "isCorrect": true },
+      { "label": "B", "text": "1/8", "isCorrect": false },
+      { "label": "C", "text": "8", "isCorrect": false },
+      { "label": "D", "text": "16", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-thermodynamics-gibbs-energy-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-thermodynamics",
+    "topicId": "chemistry-thermodynamics-gibbs-energy",
+    "questionText": "For a reaction, delta H = +40 kJ/mol and delta S = +200 J/(mol K). Above what temperature does the reaction become thermodynamically spontaneous under standard conditions?",
+    "explanation": "Spontaneity requires delta G = delta H - T delta S < 0. Converting 40 kJ to 40000 J gives T > 40000/200 = 200 K.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Above 100 K", "isCorrect": false },
+      { "label": "B", "text": "Above 200 K", "isCorrect": true },
+      { "label": "C", "text": "Below 200 K", "isCorrect": false },
+      { "label": "D", "text": "At all temperatures", "isCorrect": false }
+    ]
+  },
+  {
+    "id": "chemistry-organic-electronic-effects-001",
+    "subjectId": "chemistry",
+    "chapterId": "chemistry-organic-basic-principles",
+    "topicId": "chemistry-organic-electronic-effects",
+    "questionText": "Which order correctly represents the stability of simple alkyl carbocations?",
+    "explanation": "Alkyl groups stabilise a positive carbon through the positive inductive effect and hyperconjugation. Greater alkyl substitution therefore gives the order tertiary > secondary > primary > methyl.",
+    "difficulty": "HARD",
+    "sourceType": "ORIGINAL",
+    "examYear": null,
+    "positiveMarks": 4,
+    "negativeMarks": 1,
+    "order": 1,
+    "isPublished": true,
+    "options": [
+      { "label": "A", "text": "Methyl > primary > secondary > tertiary", "isCorrect": false },
+      { "label": "B", "text": "Primary > secondary > tertiary > methyl", "isCorrect": false },
+      { "label": "C", "text": "Tertiary > secondary > primary > methyl", "isCorrect": true },
+      { "label": "D", "text": "Secondary > tertiary > methyl > primary", "isCorrect": false }
+    ]
   }
 ]

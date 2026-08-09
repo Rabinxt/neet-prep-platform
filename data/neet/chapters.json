@@ -1,12 +1,21 @@
 [
   { "id": "physics-laws-of-motion", "subjectId": "physics", "slug": "laws-of-motion", "name": "Laws of Motion", "description": "Inertia, force, momentum, friction, and Newton's laws of motion.", "order": 1 },
   { "id": "physics-work-energy-power", "subjectId": "physics", "slug": "work-energy-power", "name": "Work, Energy and Power", "description": "Work-energy theorem, kinetic and potential energy, power, and collisions.", "order": 2 },
+  { "id": "physics-motion-straight-line", "subjectId": "physics", "slug": "motion-in-a-straight-line", "name": "Motion in a Straight Line", "description": "Position, displacement, velocity, acceleration, and graphical analysis of one-dimensional motion.", "order": 3 },
+  { "id": "physics-gravitation", "subjectId": "physics", "slug": "gravitation", "name": "Gravitation", "description": "Universal gravitation, gravitational potential, satellites, and orbital motion.", "order": 4 },
+  { "id": "physics-current-electricity", "subjectId": "physics", "slug": "current-electricity", "name": "Current Electricity", "description": "Electric current, resistance, circuit combinations, cells, and internal resistance.", "order": 5 },
 
   { "id": "chemistry-structure-of-atom", "subjectId": "chemistry", "slug": "structure-of-atom", "name": "Structure of Atom", "description": "Atomic models, subatomic particles, quantum numbers, and electronic configuration.", "order": 1 },
   { "id": "chemistry-equilibrium", "subjectId": "chemistry", "slug": "equilibrium", "name": "Equilibrium", "description": "Chemical and ionic equilibrium, acids, bases, and buffer systems.", "order": 2 },
   { "id": "chemistry-chemical-bonding", "subjectId": "chemistry", "slug": "chemical-bonding", "name": "Chemical Bonding and Molecular Structure", "description": "Ionic and covalent bonding, molecular geometry, and bonding theories.", "order": 3 },
+  { "id": "chemistry-basic-concepts", "subjectId": "chemistry", "slug": "some-basic-concepts-of-chemistry", "name": "Some Basic Concepts of Chemistry", "description": "Moles, molar mass, chemical formulae, and quantitative relationships in reactions.", "order": 4 },
+  { "id": "chemistry-thermodynamics", "subjectId": "chemistry", "slug": "thermodynamics", "name": "Thermodynamics", "description": "Enthalpy, entropy, Hess's law, Gibbs energy, and spontaneity.", "order": 5 },
+  { "id": "chemistry-organic-basic-principles", "subjectId": "chemistry", "slug": "organic-chemistry-basic-principles", "name": "Organic Chemistry: Some Basic Principles", "description": "Electronic effects, reaction intermediates, and stability in organic molecules.", "order": 6 },
 
   { "id": "biology-cell-unit-of-life", "subjectId": "biology", "slug": "cell-unit-of-life", "name": "Cell: The Unit of Life", "description": "Cell structure, organelles, membranes, and differences among cell types.", "order": 1 },
   { "id": "biology-biomolecules", "subjectId": "biology", "slug": "biomolecules", "name": "Biomolecules", "description": "Proteins, carbohydrates, lipids, nucleic acids, and enzymes.", "order": 2 },
-  { "id": "biology-photosynthesis", "subjectId": "biology", "slug": "photosynthesis", "name": "Photosynthesis in Higher Plants", "description": "Photosynthetic pigments, light reactions, carbon fixation, and limiting factors.", "order": 3 }
+  { "id": "biology-photosynthesis", "subjectId": "biology", "slug": "photosynthesis", "name": "Photosynthesis in Higher Plants", "description": "Photosynthetic pigments, light reactions, carbon fixation, and limiting factors.", "order": 3 },
+  { "id": "biology-cell-cycle-division", "subjectId": "biology", "slug": "cell-cycle-and-cell-division", "name": "Cell Cycle and Cell Division", "description": "Interphase, mitosis, meiosis, chromosome behaviour, and DNA content changes.", "order": 4 },
+  { "id": "biology-human-reproduction", "subjectId": "biology", "slug": "human-reproduction", "name": "Human Reproduction", "description": "Reproductive anatomy, gametogenesis, fertilisation, implantation, and pregnancy.", "order": 5 },
+  { "id": "biology-inheritance-variation", "subjectId": "biology", "slug": "principles-of-inheritance-and-variation", "name": "Principles of Inheritance and Variation", "description": "Mendelian inheritance, crosses, probability, chromosomes, and genetic variation.", "order": 6 }
 ]
