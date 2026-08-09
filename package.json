@@ -19,7 +19,9 @@
     "content:import": "tsx scripts/content/import.ts",
     "test:attempts": "tsx --test src/server/attempts/scoring.test.ts",
     "test:attempts:integration": "tsx scripts/test-attempt-persistence.ts",
-    "test:auth": "tsx scripts/test-auth-ownership.ts"
+    "test:auth": "tsx scripts/test-auth-ownership.ts",
+    "test:analytics": "tsx --test src/server/analytics/calculate.test.ts",
+    "test:analytics:integration": "tsx scripts/test-dashboard-analytics.ts"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.6.26",
