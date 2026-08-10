@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseAdminImportJson } from "@/server/admin/import";
+import { findHierarchyOrderConflicts, parseAdminImportJson } from "@/server/admin/import";
 
 const omitted = Symbol("omitted");
 
@@ -90,4 +90,92 @@ test("PYQ imports still require a legitimate exam year", () => {
     assertInvalidYear("PYQ")
       .some((error) => error.includes("Verified PYQs require an exam year")),
   );
+});
+
+function biologyFiveQuestionBundle(subjectOrder: number, chapterOrder: number) {
+  return JSON.stringify({
+    subjects: [{
+      id: "biology",
+      name: "Biology",
+      description: "Biology for NEET.",
+      order: subjectOrder,
+    }],
+    chapters: [{
+      id: "biology-cell-unit-of-life",
+      subjectId: "biology",
+      slug: "cell-the-unit-of-life",
+      name: "Cell: The Unit of Life",
+      description: "Cell structure and organelles.",
+      order: chapterOrder,
+    }],
+    topics: [
+      {
+        id: "biology-cell-structure",
+        chapterId: "biology-cell-unit-of-life",
+        slug: "cell-structure",
+        name: "Cell Structure",
+        description: "Fundamental cellular structure.",
+        order: 1,
+      },
+      {
+        id: "biology-cell-organelles",
+        chapterId: "biology-cell-unit-of-life",
+        slug: "cell-organelles",
+        name: "Cell Organelles",
+        description: "Structure and function of cell organelles.",
+        order: 2,
+      },
+    ],
+    questions: Array.from({ length: 5 }, (_, index) => ({
+      id: `biology-cell-import-${index + 1}`,
+      subjectId: "biology",
+      chapterId: "biology-cell-unit-of-life",
+      topicId: index % 2 === 0 ? "biology-cell-structure" : "biology-cell-organelles",
+      questionText: `Importer order validation question ${index + 1}?`,
+      explanation: "Option A is correct in this importer-only fixture.",
+      difficulty: "MEDIUM",
+      sourceType: "ORIGINAL",
+      positiveMarks: 4,
+      negativeMarks: 1,
+      order: index + 1,
+      isPublished: false,
+      options: [
+        { label: "A", text: "Correct option", isCorrect: true },
+        { label: "B", text: "Distractor B", isCorrect: false },
+        { label: "C", text: "Distractor C", isCorrect: false },
+        { label: "D", text: "Distractor D", isCorrect: false },
+      ],
+    })),
+  });
+}
+
+const currentHierarchy = [
+  { slug: "physics", order: 1, chapters: [] },
+  { slug: "chemistry", order: 2, chapters: [] },
+  {
+    slug: "biology",
+    order: 3,
+    chapters: Array.from({ length: 6 }, (_, index) => ({
+      slug: index === 0 ? "cell-unit-of-life" : `existing-biology-chapter-${index + 1}`,
+      order: index + 1,
+      topics: [],
+    })),
+  },
+];
+
+test("preview preflight reports the imported Biology subject and chapter order collisions", () => {
+  const parsed = parseAdminImportJson(biologyFiveQuestionBundle(1, 1));
+  assert(parsed.bundle, parsed.errors.join(" "));
+  assert.deepEqual(findHierarchyOrderConflicts(parsed.bundle, currentHierarchy), [
+    "Subject biology uses order 1, already assigned to subject physics.",
+    "Chapter biology-cell-unit-of-life uses order 1, already assigned to chapter cell-unit-of-life within subject biology.",
+  ]);
+});
+
+test("corrected Biology hierarchy orders pass preflight while topic and question orders remain unchanged", () => {
+  const parsed = parseAdminImportJson(biologyFiveQuestionBundle(3, 7));
+  assert(parsed.bundle, parsed.errors.join(" "));
+  assert.deepEqual(findHierarchyOrderConflicts(parsed.bundle, currentHierarchy), []);
+  assert.deepEqual(parsed.bundle.topics.map((topic) => topic.order), [1, 2]);
+  assert.deepEqual(parsed.bundle.questions.map((question) => question.order), [1, 2, 3, 4, 5]);
 });

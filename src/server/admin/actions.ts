@@ -31,6 +31,33 @@ function failure(error: unknown, fallback: string): AdminActionResult {
   return { ok: false, message: fallback };
 }
 
+function prismaErrorCode(error: unknown) {
+  if (!error || typeof error !== "object" || !("code" in error)) return null;
+  const code = (error as { code?: unknown }).code;
+  return typeof code === "string" && /^P\d{4}$/.test(code) ? code : null;
+}
+
+function importFailure(error: unknown): AdminActionResult {
+  if (error instanceof AdminValidationError) return failure(error, "Import could not be applied.");
+
+  const code = prismaErrorCode(error);
+  if (process.env.NODE_ENV !== "production") {
+    console.error("Admin import failed.", { prismaCode: code ?? "unavailable" });
+  }
+  const details = code === "P2002"
+    ? "A unique hierarchy order, slug, or question import ID conflicts with existing content. Re-run Validate and Preview after checking the reported identifiers."
+    : code === "P2003"
+      ? "A hierarchy relationship changed or is unavailable. Re-run Validate and Preview before applying."
+      : code === "P2028"
+        ? "The database transaction could not complete. No partial content was saved."
+        : "The database rejected the import. In development, check the server log for the sanitized Prisma diagnostic code.";
+  return {
+    ok: false,
+    message: "Import failed and no partial changes were saved.",
+    fieldErrors: { import: details },
+  };
+}
+
 function isSafeAdminIdentifier(value: unknown): value is string {
   return typeof value === "string" && value.length > 0 && value.length <= 100;
 }
@@ -170,6 +197,6 @@ export async function applyImportAction(raw: string): Promise<AdminActionResult<
     revalidatePath("/admin/import");
     return { ok: true, message: "Content imported in one transaction.", data: result };
   } catch (error) {
-    return failure(error, "Import failed and no partial changes were saved.");
+    return importFailure(error);
   }
 }

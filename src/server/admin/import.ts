@@ -28,6 +28,16 @@ export type AdminImportPreview = {
 
 type ParseResult = { bundle: ContentBundle | null; errors: string[] };
 
+type ExistingHierarchySubject = {
+  slug: string;
+  order: number;
+  chapters: Array<{
+    slug: string;
+    order: number;
+    topics: Array<{ slug: string; order: number }>;
+  }>;
+};
+
 function object(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -226,23 +236,88 @@ export function parseAdminImportJson(raw: string): ParseResult {
     : { bundle: { subjects, chapters, topics, questions }, errors: [] };
 }
 
+export function findHierarchyOrderConflicts(
+  bundle: ContentBundle,
+  existingSubjects: ExistingHierarchySubject[],
+) {
+  const errors: string[] = [];
+  const existingSubjectBySlug = new Map(existingSubjects.map((subject) => [subject.slug, subject]));
+
+  for (const subject of bundle.subjects) {
+    const orderOwner = existingSubjects.find((existing) => existing.order === subject.order);
+    if (orderOwner && orderOwner.slug !== subject.id) {
+      errors.push(`Subject ${subject.id} uses order ${subject.order}, already assigned to subject ${orderOwner.slug}.`);
+    }
+  }
+
+  const chapterById = new Map(bundle.chapters.map((chapter) => [chapter.id, chapter]));
+  for (const chapter of bundle.chapters) {
+    const existingSubject = existingSubjectBySlug.get(chapter.subjectId);
+    const orderOwner = existingSubject?.chapters.find((existing) => existing.order === chapter.order);
+    if (orderOwner && orderOwner.slug !== chapter.slug) {
+      errors.push(`Chapter ${chapter.id} uses order ${chapter.order}, already assigned to chapter ${orderOwner.slug} within subject ${chapter.subjectId}.`);
+    }
+  }
+
+  for (const topic of bundle.topics) {
+    const chapter = chapterById.get(topic.chapterId);
+    const existingChapter = chapter
+      ? existingSubjectBySlug.get(chapter.subjectId)?.chapters.find((existing) => existing.slug === chapter.slug)
+      : undefined;
+    const orderOwner = existingChapter?.topics.find((existing) => existing.order === topic.order);
+    if (orderOwner && orderOwner.slug !== topic.slug) {
+      errors.push(`Topic ${topic.id} uses order ${topic.order}, already assigned to topic ${orderOwner.slug} within chapter ${topic.chapterId}.`);
+    }
+  }
+
+  return errors;
+}
+
+async function loadExistingHierarchy(bundle: ContentBundle) {
+  return getPrisma().subject.findMany({
+    where: {
+      OR: [
+        { slug: { in: bundle.subjects.map((item) => item.id) } },
+        { order: { in: bundle.subjects.map((item) => item.order) } },
+      ],
+    },
+    select: {
+      slug: true,
+      order: true,
+      chapters: {
+        select: {
+          slug: true,
+          order: true,
+          topics: { select: { slug: true, order: true } },
+        },
+      },
+    },
+  });
+}
+
+function assertNoHierarchyOrderConflicts(
+  bundle: ContentBundle,
+  existingSubjects: ExistingHierarchySubject[],
+) {
+  const errors = findHierarchyOrderConflicts(bundle, existingSubjects);
+  if (errors.length > 0) {
+    throw new AdminValidationError("Import conflicts with existing hierarchy orders.", {
+      import: errors.join("\n"),
+    });
+  }
+}
+
 export async function previewAdminImport(raw: string): Promise<AdminImportPreview> {
   const parsed = parseAdminImportJson(raw);
   if (!parsed.bundle) throw new AdminValidationError("Import validation failed.", { import: parsed.errors.join("\n") });
-  const prisma = getPrisma();
   const [existingSubjects, existingQuestions] = await Promise.all([
-    prisma.subject.findMany({
-      where: { slug: { in: parsed.bundle.subjects.map((item) => item.id) } },
-      select: {
-        slug: true,
-        chapters: { select: { slug: true, topics: { select: { slug: true } } } },
-      },
-    }),
-    prisma.question.findMany({
+    loadExistingHierarchy(parsed.bundle),
+    getPrisma().question.findMany({
       where: { importId: { in: parsed.bundle.questions.map((item) => item.id) } },
       select: { importId: true },
     }),
   ]);
+  assertNoHierarchyOrderConflicts(parsed.bundle, existingSubjects);
   const subjectSlugs = new Set(existingSubjects.map((item) => item.slug));
   const chapterKeys = new Set(existingSubjects.flatMap((subject) => subject.chapters.map((chapter) => `${subject.slug}:${chapter.slug}`)));
   const topicKeys = new Set(existingSubjects.flatMap((subject) => subject.chapters.flatMap((chapter) => chapter.topics.map((topic) => `${subject.slug}:${chapter.slug}:${topic.slug}`))));
@@ -274,5 +349,6 @@ export async function previewAdminImport(raw: string): Promise<AdminImportPrevie
 export async function applyAdminImport(raw: string) {
   const parsed = parseAdminImportJson(raw);
   if (!parsed.bundle) throw new AdminValidationError("Import validation failed.", { import: parsed.errors.join("\n") });
+  assertNoHierarchyOrderConflicts(parsed.bundle, await loadExistingHierarchy(parsed.bundle));
   return importContentBundle(getPrisma(), parsed.bundle);
 }
