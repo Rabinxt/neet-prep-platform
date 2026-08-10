@@ -24,6 +24,7 @@
     "test:analytics": "tsx --test src/server/analytics/calculate.test.ts",
     "test:analytics:integration": "tsx scripts/test-dashboard-analytics.ts",
     "test:admin": "tsx scripts/test-admin-content.ts",
+    "test:admin:import-validation": "tsx --test src/server/admin/import.test.ts",
     "test:security": "tsx scripts/test-production-security.ts",
     "check:repo": "tsx scripts/check-repository-hygiene.ts",
     "check:client-secrets": "tsx scripts/check-client-bundle-secrets.ts",

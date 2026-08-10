@@ -41,7 +41,7 @@ export function validateQuestionInput(value: unknown): QuestionInput {
   const explanation = text(input.explanation, 10_000);
   const difficulty = input.difficulty;
   const sourceType = input.sourceType;
-  const examYear = input.examYear === null || input.examYear === ""
+  const examYear = input.examYear === undefined || input.examYear === null || input.examYear === ""
     ? null
     : integer(input.examYear);
   const positiveMarks = integer(input.positiveMarks);
