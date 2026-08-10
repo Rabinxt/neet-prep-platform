@@ -21,7 +21,9 @@
     "test:attempts:integration": "tsx scripts/test-attempt-persistence.ts",
     "test:auth": "tsx scripts/test-auth-ownership.ts",
     "test:analytics": "tsx --test src/server/analytics/calculate.test.ts",
-    "test:analytics:integration": "tsx scripts/test-dashboard-analytics.ts"
+    "test:analytics:integration": "tsx scripts/test-dashboard-analytics.ts",
+    "test:admin": "tsx scripts/test-admin-content.ts",
+    "admin:promote": "tsx scripts/promote-admin.ts"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.6.26",

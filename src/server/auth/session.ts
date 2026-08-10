@@ -22,7 +22,7 @@ export async function requireUser(callbackUrl = "/dashboard") {
 }
 
 export async function requireAdmin() {
-  const user = await requireUser();
+  const user = await requireUser("/admin");
   if (user.role !== "ADMIN") notFound();
   return user;
 }

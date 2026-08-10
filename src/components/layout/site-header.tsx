@@ -53,6 +53,7 @@ export function SiteHeader() {
         <div className="hidden items-center gap-2 md:flex">
           {isPending ? <span className="h-9 w-28 animate-pulse rounded-xl bg-slate-100" aria-label="Loading account" /> : session ? (
             <>
+              {session.user.role === "ADMIN" ? <ButtonLink href="/admin" variant="ghost" size="sm">Admin</ButtonLink> : null}
               <ButtonLink href="/dashboard" variant="ghost" size="sm">
                 <span className="grid size-7 place-items-center rounded-lg bg-emerald-100 text-[11px] font-extrabold text-emerald-800">{initials}</span>
                 Dashboard
@@ -79,6 +80,7 @@ export function SiteHeader() {
               <div className="my-2 border-t border-slate-200" />
               {session ? (
                 <>
+                  {session.user.role === "ADMIN" ? <Link href="/admin" className="rounded-xl px-3 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Admin workspace</Link> : null}
                   <Link href="/dashboard" className="rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">Student dashboard</Link>
                   <SignOutButton className="w-full rounded-xl px-3 py-2.5 text-left" />
                 </>

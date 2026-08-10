@@ -2,7 +2,7 @@
 
 A production-oriented NEET preparation platform built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and Prisma ORM.
 
-The current foundation includes a real academic hierarchy (`Subject -> Chapter -> Topic -> Question`), a validated JSON content importer, a safe question bank, and persistent anonymous Practice and Exam Modes. Authentication, analytics, and administration are intentionally deferred.
+The platform includes a real academic hierarchy (`Subject -> Chapter -> Topic -> Question`), a validated JSON content importer, a safe question bank, persistent Practice and Exam Modes, Better Auth accounts, student analytics, and server-authorized administration.
 
 ## Requirements
 
@@ -118,7 +118,21 @@ Errors include the source file, content identifier, and reason. Database credent
 - `ORIGINAL`: reviewed, original preparation content created for this platform.
 - `PYQ`: a verified previous-year NEET question. It requires the real exam year; never guess or fabricate one.
 
-The committed example bank contains nine clearly labelled `SAMPLE` questions: three each for Physics, Chemistry, and Biology, spread across eight chapters and nine topics. It proves the workflow; it is not a complete syllabus or an official PYQ archive.
+The committed development bank contains 36 clearly labelled `SAMPLE` or `ORIGINAL` questions, balanced across Physics, Chemistry, and Biology. It proves the workflow; it is not a complete syllabus or an official PYQ archive.
+
+## Administration
+
+Every `/admin` page and mutation verifies the authenticated role on the server. The UI supports question search, filters, pagination, transactional create/edit, publication controls, safe deletion, conservative hierarchy management, and bounded pasted-JSON imports with preview and explicit confirmation.
+
+Accounts always register as `STUDENT`; there is no public role chooser. Promote a known existing account only from the trusted server/workspace command line:
+
+```powershell
+npm run admin:promote -- student@example.com CONFIRM_ADMIN_PROMOTION
+```
+
+The command requires the exact confirmation token, promotes only that email, revokes its existing sessions, and never prints database credentials. The user must sign in again before the ADMIN role is active.
+
+Admin imports accept a single JSON object containing `subjects`, `chapters`, `topics`, and `questions` arrays using the same field structure as `data/neet`. Imports are limited to 500 KB and 200 questions, revalidated at confirmation, transactionally applied, and idempotent by question `importId`.
 
 ## Database commands
 
@@ -157,6 +171,11 @@ Practice selections, checked results, and current position are restored after re
 - `/mock-tests/attempt/[attemptId]`: owned server-timed exam, saved result, and answer review
 - `/mock-tests/start`: legacy entry point that returns to mock-test setup
 - `/pyq`: previous-year content entry point
+- `/dashboard`: authenticated student history and analytics
+- `/admin`: ADMIN-only content overview
+- `/admin/questions`, `/admin/questions/new`, `/admin/questions/[id]/edit`: question management
+- `/admin/subjects`, `/admin/chapters`, `/admin/topics`: conservative hierarchy management
+- `/admin/import`: bounded JSON validation, preview, and transactional import
 
 ## Quality checks
 
@@ -167,6 +186,10 @@ npm run db:generate
 npm run content:validate
 npm run test:attempts
 npm run test:attempts:integration
+npm run test:auth
+npm run test:analytics
+npm run test:analytics:integration
+npm run test:admin
 npm run lint
 npx tsc --noEmit
 npm run build

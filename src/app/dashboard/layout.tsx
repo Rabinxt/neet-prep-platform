@@ -6,7 +6,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   const user = await requireUser("/dashboard");
   return (
     <div className="min-h-screen bg-slate-50">
-      <DashboardHeader user={{ name: user.name, email: user.email }} />
+      <DashboardHeader user={{ name: user.name, email: user.email, role: user.role }} />
       <main>{children}</main>
     </div>
   );
