@@ -72,7 +72,7 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
   return (
     <div>
       {activeAttempt && (
-        <Card className="mb-8 flex flex-col justify-between gap-4 border-blue-200 bg-blue-50 p-5 sm:flex-row sm:items-center">
+        <Card className="modal-arrive mb-8 flex flex-col justify-between gap-4 border-blue-200 bg-blue-50 p-5 sm:flex-row sm:items-center">
           <div><p className="text-xs font-bold uppercase tracking-wider text-blue-700">Exam in progress</p><h2 className="mt-1 font-bold text-slate-950">{activeAttempt.name}</h2><p className="mt-1 text-sm text-slate-600">Question {activeAttempt.currentQuestionIndex + 1} of {activeAttempt.totalQuestions} · server-timed</p></div>
           <Button type="button" className="shrink-0" onClick={() => router.push(`/mock-tests/attempt/${activeAttempt.id}`)}>Resume exam</Button>
         </Card>
@@ -82,7 +82,7 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
       <section>
         <h2 className="text-xl font-bold text-slate-950">Choose a development test</h2>
         <p className="mt-2 text-sm leading-6 text-slate-500">These tests use SAMPLE question-bank content and are not official NEET papers.</p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="stagger-in mt-5 grid gap-4 sm:grid-cols-2">
           {presets.map((item) => {
             const tone = getSubjectTheme(item.id);
             return (
@@ -92,7 +92,7 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
               onClick={() => choosePreset(item.id)}
               aria-pressed={preset.id === item.id}
               className={cn(
-                "group relative overflow-hidden rounded-2xl border p-5 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600",
+                "surface-lift group relative overflow-hidden rounded-2xl border p-5 text-left transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600",
                 preset.id === item.id
                   ? item.id === "mixed" ? "border-slate-700 bg-slate-950 text-white shadow-lg" : cn(tone.border, tone.soft, "shadow-md")
                   : "border-slate-200 bg-white hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg",
@@ -129,7 +129,7 @@ export function MockTestSetup({ presets, activeAttempt }: { presets: ExamPreset[
       </section>
 
       <aside>
-        <Card className="overflow-hidden border-0 p-6 shadow-[0_20px_55px_rgba(15,23,42,0.10)] lg:sticky lg:top-24">
+        <Card className="overflow-hidden border-0 p-6 shadow-[0_24px_65px_rgba(15,23,42,0.12)] lg:sticky lg:top-28">
           <div className="-mx-6 -mt-6 mb-6 bg-slate-950 px-6 py-5 text-white">
           <p className="text-xs font-bold uppercase tracking-wider text-green-700">Before you start</p>
           <h2 className="mt-2 text-xl font-bold text-white">{preset.name}</h2>

@@ -7,10 +7,10 @@ type Size = "sm" | "md" | "lg";
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-emerald-700 text-white shadow-[0_8px_22px_rgba(4,120,87,0.18)] hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-[0_12px_28px_rgba(4,120,87,0.24)] focus-visible:outline-emerald-700",
+    "bg-[linear-gradient(135deg,#087a55,#07523e)] text-white shadow-[0_10px_25px_rgba(4,120,87,0.22)] hover:-translate-y-0.5 hover:brightness-110 hover:shadow-[0_15px_32px_rgba(4,120,87,0.28)] focus-visible:outline-emerald-700",
   secondary:
-    "border border-slate-300 bg-white text-slate-800 shadow-sm hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md",
-  ghost: "text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+    "border border-slate-300/90 bg-white/90 text-slate-800 shadow-[0_3px_10px_rgba(15,23,42,0.05)] backdrop-blur hover:-translate-y-0.5 hover:border-slate-400 hover:bg-white hover:shadow-md",
+  ghost: "text-slate-700 hover:bg-emerald-50 hover:text-emerald-900",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -21,7 +21,7 @@ const sizeClasses: Record<Size, string> = {
 
 function buttonClasses(variant: Variant, size: Size, className?: string) {
   return cn(
-    "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-[background-color,border-color,color,box-shadow,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-2 rounded-[0.9rem] font-bold tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,filter,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50",
     variantClasses[variant],
     sizeClasses[size],
     className,

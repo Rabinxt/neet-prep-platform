@@ -43,16 +43,16 @@ export function StudentDashboard({
 }) {
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden bg-slate-950 px-6 py-8 text-white sm:px-9 sm:py-10">
+      <section className="relative overflow-hidden rounded-[1.75rem] bg-slate-950 px-6 py-8 text-white shadow-[0_25px_70px_rgba(2,6,23,0.16)] sm:px-9 sm:py-10">
         <div className="study-grid absolute inset-0 opacity-60" />
-        <div className="absolute -right-20 -top-28 size-72 rounded-full bg-emerald-500/15 blur-3xl" />
+        <div className="ambient-orb absolute -right-20 -top-28 size-72 bg-emerald-500/15 blur-3xl" />
         <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
+          <div className="reveal-up">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">Your preparation workspace</p>
             <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-[-0.045em] text-white sm:text-5xl">Welcome back, {firstName}.</h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">Real performance from your completed Practice sessions and Mock Tests. Signed in as {email}.</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="reveal-up reveal-delay-1 flex flex-wrap gap-2">
             <ButtonLink href="/practice" className="bg-white text-slate-950 shadow-none hover:bg-emerald-50">Start Practice</ButtonLink>
             <ButtonLink href="/mock-tests" variant="secondary" className="border-white/20 bg-white/10 text-white hover:bg-white/15">Take Mock Test</ButtonLink>
             <ButtonLink href="/questions" variant="ghost" className="text-slate-200 hover:bg-white/10 hover:text-white">Browse Questions</ButtonLink>
@@ -110,7 +110,7 @@ function ContinueStudying({ attempts }: { attempts: ActiveAttempt[] }) {
       </div>
       <div className="mt-5 grid gap-3 lg:grid-cols-2">
         {attempts.map((attempt) => (
-          <Link key={attempt.id} href={attempt.href} className="group bg-white p-4 shadow-sm ring-1 ring-emerald-200 transition hover:-translate-y-0.5 hover:shadow-md">
+          <Link key={attempt.id} href={attempt.href} className="surface-lift group bg-white p-4 shadow-sm ring-1 ring-emerald-200">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <Badge tone={attempt.type === "PRACTICE" ? "green" : "blue"}>{attempt.type === "PRACTICE" ? "Practice" : "Mock Test"}</Badge>
@@ -119,7 +119,7 @@ function ContinueStudying({ attempts }: { attempts: ActiveAttempt[] }) {
               </div>
               <ArrowRightIcon className="mt-1 size-5 shrink-0 text-emerald-700 transition-transform group-hover:translate-x-1" />
             </div>
-            <div className="mt-4 h-1.5 overflow-hidden bg-emerald-100"><div className="h-full bg-emerald-600" style={{ width: `${attempt.progress}%` }} /></div>
+            <div className="mt-4 h-1.5 overflow-hidden bg-emerald-100"><div className="progress-shine h-full bg-emerald-600" style={{ width: `${attempt.progress}%` }} /></div>
           </Link>
         ))}
       </div>
@@ -157,9 +157,9 @@ function Overview({ analytics }: { analytics: DashboardAnalytics }) {
     <section aria-labelledby="overview-heading">
       <SectionHeading eyebrow="All-time overview" title="Your numbers, without the noise" description="Abandoned attempts, unchecked Practice selections, and unanswered questions are excluded from accuracy." />
       <h2 id="overview-heading" className="sr-only">Performance overview</h2>
-      <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="stagger-in mt-5 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {metrics.map(({ label, value, note, icon: Icon, tone }) => (
-          <Card key={label} className="border-0 p-4 sm:p-5">
+          <Card key={label} className="surface-lift border-0 p-4 sm:p-5">
             <span className={`grid size-9 place-items-center ${tone}`}><Icon className="size-4" /></span>
             <p className="mt-4 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{value}</p>
             <p className="mt-1 text-sm font-semibold text-slate-700">{label}</p>

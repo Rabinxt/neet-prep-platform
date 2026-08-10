@@ -17,11 +17,12 @@ export function SubjectCard({ subject }: { subject: SubjectSummary }) {
     <Link
       href={`/subjects/${subject.slug}`}
       className={cn(
-        "group relative flex min-h-[25rem] overflow-hidden rounded-[1.75rem] p-6 text-white shadow-[0_20px_50px_rgba(15,23,42,0.13)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_rgba(15,23,42,0.2)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600 sm:p-7",
+        "group relative flex min-h-[25rem] overflow-hidden rounded-[1.75rem] p-6 text-white shadow-[0_20px_50px_rgba(15,23,42,0.13)] transition duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_30px_70px_rgba(15,23,42,0.22)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600 sm:p-7",
         tone.dark,
       )}
     >
-      <div className="dot-field absolute inset-0 opacity-30" />
+      <div className="dot-field absolute inset-0 opacity-30 transition-transform duration-700 group-hover:scale-110" />
+      <span className="absolute left-0 top-10 h-20 w-1 rounded-r-full bg-white/45 transition-all duration-500 group-hover:h-32" />
       <div className={cn("absolute -right-16 -top-16 size-48 rounded-full opacity-20 blur-3xl transition-transform duration-500 group-hover:scale-125", tone.glow)} />
       <SubjectIcon slug={subject.slug} className="absolute -bottom-5 -right-4 size-44 rotate-[-8deg] text-white/[0.08] transition duration-500 group-hover:rotate-0 group-hover:scale-105" />
       <div className="relative flex w-full flex-col">
@@ -38,7 +39,7 @@ export function SubjectCard({ subject }: { subject: SubjectSummary }) {
               <span><strong className="block text-xl text-white">{subject.chapterCount}</strong>chapters</span>
               <span><strong className="block text-xl text-white">{subject.questionCount}</strong>questions</span>
             </div>
-            <span className="grid size-11 place-items-center rounded-full bg-white text-slate-950 transition-transform duration-300 group-hover:translate-x-1"><ArrowRightIcon /></span>
+            <span className="grid size-11 place-items-center rounded-full bg-white text-slate-950 transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110"><ArrowRightIcon /></span>
           </div>
         </div>
       </div>

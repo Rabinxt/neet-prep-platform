@@ -18,7 +18,8 @@ export default async function SubjectsPage() {
     <>
       <section className="relative overflow-hidden border-b border-slate-200 bg-white">
         <div className="study-grid absolute inset-0" />
-        <Container className="relative py-16 sm:py-20">
+        <div className="ambient-orb absolute -right-24 -top-24 size-72 bg-emerald-100/80 blur-3xl" />
+        <Container className="reveal-up relative py-16 sm:py-20">
           <PageHeading
             eyebrow="NEET syllabus"
             title="Choose a subject and start building mastery"
@@ -33,7 +34,7 @@ export default async function SubjectsPage() {
               PostgreSQL is not connected yet. Showing the three core subjects from the seed catalogue.
             </div>
           )}
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="stagger-in grid gap-5 md:grid-cols-3 md:[&>*:nth-child(2)]:translate-y-8">
             {subjects.map((subject) => <SubjectCard key={subject.slug} subject={subject} />)}
           </div>
         </Container>

@@ -9,7 +9,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const user = await requireUser("/dashboard");
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen">
       <DashboardHeader user={{ name: user.name, email: user.email, role: user.role }} />
       <main>{children}</main>
     </div>

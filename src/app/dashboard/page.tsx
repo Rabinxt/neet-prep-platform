@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   const firstName = user.name.trim().split(/\s+/)[0] || "there";
 
   return (
-    <Container className="py-6 sm:py-10">
+    <Container className="py-6 sm:py-10 lg:py-12">
       <StudentDashboard firstName={firstName} email={user.email} analytics={analytics} />
     </Container>
   );

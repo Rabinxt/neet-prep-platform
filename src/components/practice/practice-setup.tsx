@@ -68,8 +68,8 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f8fc]">
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+    <div className="min-h-screen">
+      <header className="border-b border-slate-200/80 bg-white/88 backdrop-blur-xl">
         <Container className="flex h-[4.5rem] items-center justify-between">
           <BrandMark />
           <ButtonLink href="/" variant="ghost" size="sm">Back to site</ButtonLink>
@@ -79,7 +79,9 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
       <main>
         <div className="relative overflow-hidden bg-slate-950 py-12 text-white sm:py-16">
           <div className="study-grid absolute inset-0 opacity-60" />
-          <Container className="relative">
+          <div className="ambient-orb absolute -left-24 top-4 size-72 bg-sky-400/10 blur-3xl" />
+          <div className="ambient-orb absolute -right-16 bottom-0 size-72 bg-emerald-400/15 blur-3xl" />
+          <Container className="reveal-up relative">
             <div className="mx-auto max-w-3xl text-center">
               <span className="mx-auto grid size-12 place-items-center rounded-2xl border border-emerald-400/25 bg-emerald-400/10 text-emerald-300"><TargetIcon /></span>
               <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-400">Practice mode</p>
@@ -117,7 +119,7 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
                 />
               </div>
             ) : (
-              <Card className="mt-8 overflow-hidden border-0 shadow-[0_24px_70px_rgba(15,23,42,0.10)]">
+              <Card className="reveal-up reveal-delay-1 -mt-14 overflow-hidden border-0 shadow-[0_28px_80px_rgba(15,23,42,0.14)] sm:-mt-16">
                 <div className="h-1.5 bg-[linear-gradient(90deg,#38bdf8_0_33%,#a78bfa_33%_66%,#34d399_66%)]" />
                 <div className="p-5 sm:p-8">
                 <section>
@@ -132,7 +134,7 @@ export function PracticeSetup({ taxonomy, activeAttempt }: { taxonomy: PracticeT
                       {taxonomy.map((item) => {
                         const itemTone = getSubjectTheme(item.slug);
                         return (
-                        <label key={item.id} className={cn("group cursor-pointer rounded-2xl border p-4 text-left transition-all focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600", subjectId === item.id ? cn(itemTone.border, itemTone.soft, "shadow-sm") : "border-slate-200 bg-white text-slate-700 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md")}>
+                        <label key={item.id} className={cn("surface-lift group cursor-pointer rounded-2xl border p-4 text-left transition-all focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600", subjectId === item.id ? cn(itemTone.border, itemTone.soft, "shadow-md ring-1 ring-current/10") : "border-slate-200 bg-white text-slate-700 hover:border-slate-300")}>
                           <input type="radio" name="practice-subject" value={item.id} checked={subjectId === item.id} onChange={() => changeSubject(item.id)} className="sr-only" />
                           <span className={cn("mb-4 grid size-10 place-items-center rounded-xl", itemTone.soft, itemTone.accent)}><SubjectIcon slug={item.slug} className="size-6" /></span>
                           <span className="font-bold text-slate-950">{item.name}</span>

@@ -38,9 +38,9 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
     <>
       <section className={cn("relative overflow-hidden text-white", tone.dark)}>
         <div className="dot-field absolute inset-0 opacity-30" />
-        <div className={cn("absolute -right-24 -top-24 size-80 rounded-full opacity-20 blur-3xl", tone.glow)} />
-        <SubjectIcon slug={subject.slug} className="absolute -bottom-24 right-[8%] size-96 rotate-[-8deg] text-white/[0.055]" />
-        <Container className="relative py-12 sm:py-20">
+        <div className={cn("ambient-orb absolute -right-24 -top-24 size-80 opacity-20 blur-3xl", tone.glow)} />
+        <SubjectIcon slug={subject.slug} className="float-slower absolute -bottom-24 right-[8%] size-96 rotate-[-8deg] text-white/[0.055]" />
+        <Container className="reveal-up relative py-12 sm:py-20">
           <nav className="mb-9 flex items-center gap-2 text-sm text-white/55" aria-label="Breadcrumb">
             <Link href="/subjects" className="hover:text-white">Subjects</Link>
             <span aria-hidden="true">/</span>
@@ -55,7 +55,7 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
             </div>
             <ButtonLink href="#chapters" size="lg" className="bg-white text-slate-950 shadow-none hover:bg-white/90">Explore chapters <ArrowRightIcon className="size-4" /></ButtonLink>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <div className="stagger-in mt-10 grid gap-4 sm:grid-cols-3">
             <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.chapterCount}</p><p className="mt-1 text-sm text-white/55">Syllabus chapters</p></div>
             <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.topicCount}</p><p className="mt-1 text-sm text-white/55">Structured topics</p></div>
             <div className="border-l border-white/20 pl-4"><p className="text-3xl font-bold">{subject.questionCount}</p><p className="mt-1 text-sm text-white/55">Published questions</p></div>
@@ -76,14 +76,14 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-950">Chapters</h2>
               <p className="mt-2 text-slate-600">Chapters are loaded in their configured academic order.</p>
               {subject.chapters.length > 0 ? (
-                <div className="mt-6 space-y-3">
+                <div className="stagger-in mt-6 space-y-3">
                   {subject.chapters.map((chapter, index) => (
                     <Link
                       key={chapter.id}
                       href={`/questions?subject=${subject.slug}&chapter=${chapter.id}`}
                       className="group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
                     >
-                      <div className={cn("flex items-center gap-4 border-b border-slate-200 bg-transparent px-2 py-5 transition-all group-hover:pl-4", tone.accent)}>
+                      <div className={cn("flex items-center gap-4 border-b border-slate-200 bg-transparent px-2 py-5 transition-all duration-300 group-hover:bg-white/80 group-hover:pl-4 group-hover:shadow-[0_8px_24px_rgba(15,23,42,0.05)]", tone.accent)}>
                         <span className="w-9 shrink-0 font-mono text-xs font-bold opacity-55">{String(index + 1).padStart(2, "0")}</span>
                         <div className="min-w-0 flex-1">
                           <h3 className="font-bold text-slate-900">{chapter.name}</h3>
@@ -103,7 +103,7 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
               )}
             </div>
             <aside>
-              <Card className={cn("overflow-hidden border-t-4 p-6 lg:sticky lg:top-24", tone.border)}>
+              <Card className={cn("surface-lift overflow-hidden border-t-4 p-6 lg:sticky lg:top-28", tone.border)}>
                 <h2 className="font-bold text-slate-950">Content structure</h2>
                 <ul className="mt-5 space-y-4">
                   {["Subject overview", "Ordered chapters", "Ordered topics"].map((area) => (

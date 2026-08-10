@@ -27,7 +27,7 @@ export function QuestionFilters({ taxonomy, initial }: { taxonomy: PracticeTaxon
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_16px_40px_rgba(15,23,42,0.07)]">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 pt-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-[linear-gradient(90deg,#38bdf8_0_33%,#a78bfa_33%_66%,#34d399_66%)]">
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1.2fr_1.2fr_0.8fr_0.7fr_auto]">
         <FilterSelect label="Subject" value={subjectId} onChange={(value) => { setSubjectId(value); setChapterId(""); setTopicId(""); }}>
           {taxonomy.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}

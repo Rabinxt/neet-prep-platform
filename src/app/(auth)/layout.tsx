@@ -6,14 +6,15 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="relative grid min-h-screen overflow-hidden bg-white lg:grid-cols-[0.95fr_1.05fr]">
+    <main className="relative grid min-h-screen overflow-hidden bg-[#f5f8f7] lg:grid-cols-[0.92fr_1.08fr]">
       <section className="relative hidden overflow-hidden bg-slate-950 p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <div className="study-grid absolute inset-0 opacity-70" />
-        <div className="absolute -left-28 top-1/3 size-80 rounded-full bg-emerald-500/15 blur-3xl" />
+        <div className="ambient-orb absolute -left-28 top-1/3 size-80 bg-emerald-500/15 blur-3xl" />
+        <div className="ambient-orb absolute -right-20 top-16 size-60 bg-sky-500/10 blur-3xl" />
         <BrandMark className="relative [&_span:last-child]:text-white" />
-        <div className="relative max-w-xl">
+        <div className="reveal-up relative max-w-xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">One focused account</p>
-          <p className="mt-5 text-5xl font-bold leading-[1.05] tracking-[-0.055em]">Your practice should follow your progress.</p>
+          <p className="mt-5 text-5xl font-bold leading-[1.05] tracking-[-0.055em]">Your practice should <span className="text-emerald-400">follow your progress.</span></p>
           <p className="mt-6 max-w-lg text-lg leading-8 text-slate-300">Move between anonymous exploration and a secure student account without losing the attempts you have already started.</p>
         </div>
         <div className="relative grid grid-cols-3 gap-3 text-sm">
@@ -22,9 +23,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           ))}
         </div>
       </section>
-      <section className="relative flex min-h-screen items-center justify-center px-5 py-12 sm:px-8">
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-12 sm:px-8">
+        <div className="ambient-orb absolute -right-24 top-20 size-72 bg-emerald-200/35 blur-3xl" />
+        <div className="absolute bottom-0 left-0 size-72 rounded-full bg-sky-100/50 blur-3xl" />
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-violet-500 lg:hidden" />
-        <div className="w-full max-w-md">
+        <div className="reveal-up relative w-full max-w-md rounded-[1.75rem] border border-white bg-white/80 p-1 shadow-[0_30px_90px_rgba(16,33,28,0.08)] backdrop-blur sm:p-7 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <BrandMark className="mb-10 lg:hidden" />
           {children}
         </div>

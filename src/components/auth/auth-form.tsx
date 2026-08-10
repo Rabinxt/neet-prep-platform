@@ -100,7 +100,7 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
           required
           minLength={8}
           maxLength={128}
-          className="mt-2 h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-[15px] text-slate-950 shadow-sm transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+          className="mt-2 h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-[15px] text-slate-950 shadow-[0_4px_14px_rgba(15,23,42,0.04)] transition placeholder:text-slate-400 hover:border-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
           placeholder="At least 8 characters"
         />
       </div>
@@ -139,7 +139,7 @@ function Field({
         name={name}
         required
         {...inputProps}
-        className="mt-2 h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-[15px] text-slate-950 shadow-sm transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+        className="mt-2 h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-[15px] text-slate-950 shadow-[0_4px_14px_rgba(15,23,42,0.04)] transition placeholder:text-slate-400 hover:border-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
       />
     </div>
   );

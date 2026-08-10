@@ -112,8 +112,8 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#eef1f6]">
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur-xl">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 shadow-[0_8px_30px_rgba(16,33,28,0.05)] backdrop-blur-xl">
         <Container className="flex min-h-16 items-center justify-between gap-4 py-2">
           <div className="flex min-w-0 items-center gap-4">
             <BrandMark className="hidden sm:inline-flex" />
@@ -133,7 +133,7 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
       <main><Container className="py-6 sm:py-8">
         {message && <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900" role="alert">{message}</div>}
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <Card className={cn("overflow-hidden border-t-4 shadow-[0_18px_55px_rgba(15,23,42,0.08)]", tone.border)}>
+          <Card className={cn("overflow-hidden border-t-4 shadow-[0_24px_65px_rgba(16,33,28,0.09)]", tone.border)}>
             <div className="border-b border-slate-200 bg-slate-50 px-5 py-4 sm:px-7">
               <div className="flex items-center justify-between gap-3 text-sm">
                 <span className="font-bold text-slate-800">Question {currentIndex + 1} of {attempt.questions.length}</span>
@@ -142,7 +142,7 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
               <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200"><div className="progress-shine h-full rounded-full bg-emerald-600" style={{ width: `${((currentIndex + 1) / attempt.questions.length) * 100}%` }} /></div>
             </div>
 
-            <div className="p-5 sm:p-7">
+            <div key={question.id} className="question-enter p-5 sm:p-7">
               <p className="text-sm text-slate-500">{question.subject.name} · {question.chapter.name}{question.topic ? ` · ${question.topic.name}` : ""}</p>
               <div className={cn("mt-5 inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold", tone.soft, tone.accent)}><SubjectIcon slug={question.subject.slug} className="size-5" />{question.subject.name}</div>
               <h1 className="mt-5 text-xl font-bold leading-8 tracking-[-0.015em] text-slate-950 sm:text-2xl">{question.questionText}</h1>
@@ -154,7 +154,7 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
                   const selectedIncorrect = Boolean(checkedResult && selected && !correct);
                   return (
                     <label key={option.id} className={cn(
-                      "group flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600",
+                      "choice-row group flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600",
                       !checkedResult && selected && "border-emerald-600 bg-emerald-50 shadow-[inset_3px_0_0_#059669]",
                       !checkedResult && !selected && "border-slate-200 hover:translate-x-1 hover:border-slate-300 hover:bg-slate-50",
                       correct && "border-emerald-600 bg-emerald-50 shadow-[inset_3px_0_0_#059669]",
@@ -164,9 +164,13 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
                       <input type="radio" name={`practice-${question.id}`} checked={selected} onChange={() => saveSelection(option.id)} className="sr-only" />
                       <span className={cn(
                         "grid size-7 shrink-0 place-items-center rounded-lg border text-sm font-bold",
-                        selected ? "border-emerald-600 bg-emerald-700 text-white" : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400",
-                        correct && "border-emerald-600 bg-emerald-700 text-white",
-                        selectedIncorrect && "border-rose-500 bg-rose-600 text-white",
+                        correct
+                          ? "border-emerald-600 bg-emerald-700 text-white"
+                          : selectedIncorrect
+                            ? "border-rose-500 bg-rose-600 text-white"
+                            : selected
+                              ? "border-emerald-600 bg-emerald-700 text-white"
+                              : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400",
                       )}>{correct ? <CheckIcon className="size-4" /> : option.optionLabel}</span>
                       <span className="pt-0.5 text-sm leading-6 text-slate-800 sm:text-base">{option.optionText}</span>
                     </label>
@@ -175,7 +179,7 @@ export function PracticeSession({ attempt }: { attempt: ActiveAttemptData }) {
               </fieldset>
 
               <div className="mt-6" aria-live="polite">
-                {checkedResult && <div className={cn("relative overflow-hidden rounded-2xl border p-5 pl-6", checkedResult.isCorrect ? "border-emerald-200 bg-emerald-50" : "border-rose-200 bg-rose-50")}><span className={cn("absolute inset-y-0 left-0 w-1", checkedResult.isCorrect ? "bg-emerald-500" : "bg-rose-500")} /><p className={cn("font-bold", checkedResult.isCorrect ? "text-emerald-900" : "text-rose-900")}>{checkedResult.isCorrect ? "Correct answer" : "Incorrect answer"}</p>{checkedResult.explanation && <><p className="mt-3 border-t border-current/10 pt-3 text-xs font-bold uppercase tracking-wider text-slate-600">Explanation</p><p className="mt-1 text-sm leading-6 text-slate-700">{checkedResult.explanation}</p></>}</div>}
+                {checkedResult && <div className={cn("modal-arrive relative overflow-hidden rounded-2xl border p-5 pl-6", checkedResult.isCorrect ? "border-emerald-200 bg-emerald-50" : "border-rose-200 bg-rose-50")}><span className={cn("absolute inset-y-0 left-0 w-1", checkedResult.isCorrect ? "bg-emerald-500" : "bg-rose-500")} /><p className={cn("font-bold", checkedResult.isCorrect ? "text-emerald-900" : "text-rose-900")}>{checkedResult.isCorrect ? "Correct answer" : "Incorrect answer"}</p>{checkedResult.explanation && <><p className="mt-3 border-t border-current/10 pt-3 text-xs font-bold uppercase tracking-wider text-slate-600">Explanation</p><p className="mt-1 text-sm leading-6 text-slate-700">{checkedResult.explanation}</p></>}</div>}
               </div>
 
               <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6">

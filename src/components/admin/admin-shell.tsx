@@ -29,7 +29,7 @@ export function AdminShell({
     : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen bg-[#f6f8f7] text-slate-950">
+    <div className="min-h-screen text-slate-950">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-xl lg:hidden">
         <div className="flex h-16 items-center justify-between gap-3 px-4">
           <BrandMark />
@@ -45,7 +45,7 @@ export function AdminShell({
         </nav>
       </header>
 
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 bg-[#0d2820] text-white lg:flex lg:flex-col">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/10 bg-[linear-gradient(180deg,#102e25,#081914)] text-white shadow-[12px_0_40px_rgba(8,25,20,0.08)] lg:flex lg:flex-col">
         <div className="border-b border-white/10 px-6 py-6">
           <BrandMark className="[&_span]:text-white" />
           <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Content studio</p>
@@ -53,7 +53,7 @@ export function AdminShell({
         <nav className="flex-1 space-y-1 p-4" aria-label="Admin navigation">
           {items.map((item) => (
             <Link key={item.href} href={item.href} aria-current={active(item.href) ? "page" : undefined} className={cn(
-              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
+              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-200",
               active(item.href) ? "bg-white text-slate-950 shadow-lg" : "text-emerald-50/75 hover:bg-white/10 hover:text-white",
             )}>
               <span className={cn(
@@ -80,4 +80,3 @@ export function AdminShell({
     </div>
   );
 }
-

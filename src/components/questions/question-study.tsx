@@ -73,8 +73,8 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-      <Card className={cn("overflow-hidden border-t-4", tone.border)}>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_292px]">
+      <Card className={cn("overflow-hidden border-t-4 shadow-[0_24px_65px_rgba(16,33,28,0.08)]", tone.border)}>
         <div className="border-b border-slate-200 bg-slate-50/80 px-5 py-4 sm:px-7">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm font-semibold text-slate-600">
@@ -100,7 +100,7 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
           </div>
         </div>
 
-        <div className="p-5 sm:p-7">
+        <div key={question.id} className="question-enter p-5 sm:p-7">
           <div className="flex flex-wrap items-center gap-x-2 text-sm text-slate-500">
             <span className={cn("mr-1 grid size-8 place-items-center rounded-lg", tone.soft, tone.accent)}><SubjectIcon slug={question.subject.slug} className="size-5" /></span>
             <span className={cn("font-bold", tone.accent)}>{question.subject.name}</span>
@@ -123,7 +123,7 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
                 <label
                   key={option.id}
                   className={cn(
-                    "group flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600",
+                    "choice-row group flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600",
                     !checkedResult && isSelected && "border-emerald-600 bg-emerald-50 shadow-[inset_3px_0_0_#059669]",
                     !checkedResult && !isSelected && "border-slate-200 hover:translate-x-1 hover:border-slate-300 hover:bg-slate-50",
                     isCorrectOption && "border-emerald-600 bg-emerald-50 shadow-[inset_3px_0_0_#059669]",
@@ -142,9 +142,13 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
                   <span
                     className={cn(
                       "grid size-7 shrink-0 place-items-center rounded-lg border text-sm font-bold",
-                      isSelected ? "border-emerald-600 bg-emerald-700 text-white" : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400",
-                      isCorrectOption && "border-emerald-600 bg-emerald-700 text-white",
-                      isSelectedIncorrect && "border-rose-500 bg-rose-600 text-white",
+                      isCorrectOption
+                        ? "border-emerald-600 bg-emerald-700 text-white"
+                        : isSelectedIncorrect
+                          ? "border-rose-500 bg-rose-600 text-white"
+                          : isSelected
+                            ? "border-emerald-600 bg-emerald-700 text-white"
+                            : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400",
                     )}
                   >
                     {isCorrectOption ? <CheckIcon className="size-4" /> : option.optionLabel}
@@ -157,7 +161,7 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
 
           <div className="mt-6" aria-live="polite">
             {checkedResult && (
-              <div className={cn("relative overflow-hidden rounded-2xl border p-5 pl-6", checkedResult.isCorrect ? "border-emerald-200 bg-emerald-50" : "border-rose-200 bg-rose-50")}>
+              <div className={cn("modal-arrive relative overflow-hidden rounded-2xl border p-5 pl-6", checkedResult.isCorrect ? "border-emerald-200 bg-emerald-50" : "border-rose-200 bg-rose-50")}>
                 <span className={cn("absolute inset-y-0 left-0 w-1", checkedResult.isCorrect ? "bg-emerald-500" : "bg-rose-500")} />
                 <p className={cn("font-bold", checkedResult.isCorrect ? "text-green-900" : "text-red-900")}>
                   {checkedResult.isCorrect ? "Correct answer" : "Not quite — review the correct option above"}
@@ -196,7 +200,7 @@ export function QuestionStudy({ questions }: { questions: PublicQuestion[] }) {
       </Card>
 
       <aside>
-        <Card className="overflow-hidden p-5 lg:sticky lg:top-24">
+        <Card className="overflow-hidden p-5 lg:sticky lg:top-28">
           <div className="-mx-5 -mt-5 mb-5 bg-slate-950 px-5 py-4 text-white">
           <h2 className="font-bold text-white">Question navigator</h2>
           <p className="mt-1 text-xs leading-5 text-slate-400">Your answers stay on this page while you move between questions.</p>

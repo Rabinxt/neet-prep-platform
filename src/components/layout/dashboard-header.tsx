@@ -6,11 +6,11 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 export function DashboardHeader({ user }: { user: { name: string; email: string; role: "STUDENT" | "ADMIN" } }) {
   const initials = user.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <Container className="flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/88 backdrop-blur-xl">
+      <Container className="flex h-[4.5rem] items-center justify-between gap-4">
         <BrandMark />
         <nav className="flex items-center gap-1" aria-label="Dashboard navigation">
-          <Link href="/dashboard" className="hidden rounded-lg bg-green-50 px-3 py-2 text-sm font-semibold text-green-800 sm:block">Overview</Link>
+          <Link href="/dashboard" className="hidden rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 sm:block">Overview</Link>
           <Link href="/practice" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:block">Practice</Link>
           {user.role === "ADMIN" ? <Link href="/admin" className="rounded-lg px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Admin</Link> : null}
           <Link href="/" className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Public site</Link>
