@@ -18,17 +18,44 @@ Create a local `.env` from the committed template:
 Copy-Item .env.example .env
 ```
 
-Set all three required values:
+Set the three core values and the Resend password-reset email values:
 
 ```dotenv
 DATABASE_URL="postgresql://USER:PASSWORD@POOLED_HOST/DATABASE?sslmode=require"
 BETTER_AUTH_SECRET="replace-with-at-least-32-random-characters"
 BETTER_AUTH_URL="http://localhost:3000"
+EMAIL_FROM="NEET Prep <onboarding@resend.dev>"
+RESEND_API_KEY="replace-with-your-resend-api-key"
 ```
 
 `DATABASE_URL` is server-only. For Neon on Vercel, use Neon&apos;s pooled application URL where supported; local PostgreSQL commonly omits `sslmode=require`. `BETTER_AUTH_SECRET` must be unique, high entropy, and at least 32 characters. `BETTER_AUTH_URL` must be an origin only: localhost for local work and the canonical HTTPS origin in Production.
 
 Secret-bearing `.env` files are ignored by Git. Only `.env.example`, which contains placeholders, is committed. Never prefix these values with `NEXT_PUBLIC_`.
+
+## Transactional email and password reset
+
+The application uses Better Auth&apos;s native password-reset flow and sends transactional email through Resend&apos;s HTTPS Email API. The integration uses the platform `fetch` API, so no Resend SDK dependency is required. `RESEND_API_KEY` is server-only and must never use the `NEXT_PUBLIC_` prefix.
+
+Without a verified custom domain, use exactly this development sender:
+
+```dotenv
+EMAIL_FROM="NEET Prep <onboarding@resend.dev>"
+```
+
+Resend&apos;s `resend.dev` domain is testing-only. It can send to the email address associated with your Resend account, but not to arbitrary users. For a usable local reset test, register the disposable NEET Prep account with that same Resend account email. Resend also provides addresses such as `delivered+password-reset@resend.dev` for delivery-event simulation, but those are not a substitute for an inbox where you can follow the reset link.
+
+A `*.vercel.app` application URL is not a sender domain that you own and cannot be used as `EMAIL_FROM`. You do not need to purchase a domain for development testing. If the application later needs to send reset email to arbitrary real users, first add and verify a custom domain in Resend, then replace `EMAIL_FROM` with an address on that verified domain.
+
+The automated reset suite uses an in-process capture transport and sends no email externally. The application does not print reset links, reset tokens, API keys, or passwords as a development fallback. Resend response bodies are not included in application errors or logs.
+
+The flow is:
+
+1. `/forgot-password` requests a reset for a fixed same-origin `/reset-password` destination.
+2. Better Auth writes a one-time record to the existing `Verification` table and supplies its generated callback URL to the email transport.
+3. The callback validates the token and redirects to `/reset-password?token=...`.
+4. Better Auth validates and hashes the new password, consumes the token, and revokes all existing sessions.
+
+Tokens expire after one hour and cannot be reused. Forgot-password always shows the same public message for valid email-shaped input, whether or not an account exists. Delivery must be configured before the feature can send real mail.
 
 ## Creating PostgreSQL
 
@@ -181,6 +208,8 @@ Practice selections, checked results, and current position are restored after re
 - `/admin/subjects`, `/admin/chapters`, `/admin/topics`: conservative hierarchy management
 - `/admin/import`: bounded JSON validation, preview, and transactional import
 - `/api/health`: cache-disabled, credential-free liveness response
+- `/forgot-password`: generic password-reset request form
+- `/reset-password`: one-time Better Auth reset-token form
 
 ## Safe migration and release process
 
@@ -198,7 +227,7 @@ The seed and content importer are not part of the automatic build. `db:seed` onl
 
 ## Vercel and Neon checklist
 
-- Create separate Vercel Development, Preview, and Production values for `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
+- Create separate Vercel Development, Preview, and Production values for `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `EMAIL_FROM`, and `RESEND_API_KEY`. While using Resend&apos;s testing domain, keep `EMAIL_FROM` set to `NEET Prep <onboarding@resend.dev>` and test only with the Resend account owner&apos;s email.
 - Keep Preview off the Production Neon database unless sharing production data is an explicit, reviewed decision. Prefer a separate branch/database and separate auth secret.
 - Set Production `BETTER_AUTH_URL` to the canonical HTTPS origin, never localhost.
 - Use one stable Preview origin for auth testing, with its exact origin in Preview `BETTER_AUTH_URL`. Arbitrary per-commit preview hosts are intentionally not wildcard-trusted.
@@ -211,7 +240,7 @@ The seed and content importer are not part of the automatic build. `db:seed` onl
 ## Post-deployment smoke checklist
 
 - Public: home, subjects, question bank, anonymous Practice, anonymous Mock, results/review, robots, sitemap, and `/api/health`.
-- Auth: sign-up, sign-in, sign-out, session refresh/persistence, dashboard redirect, and anonymous-attempt claim.
+- Auth: sign-up, sign-in, sign-out, forgot-password generic response, reset-link delivery, invalid/expired link, successful reset, session revocation, session persistence, dashboard redirect, and anonymous-attempt claim.
 - Authenticated study: Practice/Mock start, answer save, refresh/resume, expiry, results, and dashboard analytics.
 - Admin: ADMIN sign-in, overview, filters, create draft, publish/unpublish, hierarchy validation, import preview, and confirmed import.
 - Isolation: anonymous cannot open dashboard/admin; STUDENT cannot open admin; one account/browser cannot open another owner&apos;s attempt or analytics.
@@ -220,7 +249,7 @@ The seed and content importer are not part of the automatic build. `db:seed` onl
 
 ## Known limitations
 
-- No email verification, password-reset email, social login, or email provider.
+- No email verification or social login. Password-reset delivery uses Resend, and the current `onboarding@resend.dev` sender is limited to development/testing with the Resend account owner&apos;s email until a custom domain is verified.
 - Better Auth&apos;s built-in abuse protection applies, but there is no custom distributed rate-limit service. A serverless-safe external limiter is a future enhancement if abuse warrants it.
 - No external observability platform, payments, subscriptions, AI features, leaderboard, or tracking analytics.
 - Dashboard analytics are computed on demand from owned attempt snapshots.
@@ -238,6 +267,7 @@ npm run content:validate
 npm run test:attempts
 npm run test:attempts:integration
 npm run test:auth
+npm run test:password-reset
 npm run test:analytics
 npm run test:analytics:integration
 npm run test:admin

@@ -80,14 +80,17 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
       <div>
         <div className="flex items-center justify-between gap-3">
           <label htmlFor="password" className="text-sm font-semibold text-slate-800">Password</label>
-          <button
-            type="button"
-            onClick={() => setShowPassword((value) => !value)}
-            className="text-xs font-bold text-emerald-700 hover:text-emerald-900"
-            aria-pressed={showPassword}
-          >
-            {showPassword ? "Hide" : "Show"} password
-          </button>
+          <span className="flex items-center gap-3">
+            {!signingUp ? <Link href="/forgot-password" className="text-xs font-bold text-emerald-700 hover:text-emerald-900">Forgot password?</Link> : null}
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="text-xs font-bold text-emerald-700 hover:text-emerald-900"
+              aria-pressed={showPassword}
+            >
+              {showPassword ? "Hide" : "Show"} password
+            </button>
+          </span>
         </div>
         <input
           id="password"

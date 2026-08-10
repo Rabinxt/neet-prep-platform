@@ -6,10 +6,14 @@ import { join, relative } from "node:path";
 const clientRoot = join(process.cwd(), ".next", "static");
 assert(existsSync(clientRoot), "Build output is missing. Run npm run build before this check.");
 
-const sensitiveValues = [process.env.DATABASE_URL, process.env.BETTER_AUTH_SECRET]
+const sensitiveValues = [
+  process.env.DATABASE_URL,
+  process.env.BETTER_AUTH_SECRET,
+  process.env.RESEND_API_KEY,
+]
   .map((value) => value?.trim())
   .filter((value): value is string => Boolean(value && value.length >= 12));
-assert(sensitiveValues.length === 2, "DATABASE_URL and BETTER_AUTH_SECRET must be configured for the client-bundle scan.");
+assert(sensitiveValues.length >= 2, "DATABASE_URL and BETTER_AUTH_SECRET must be configured for the client-bundle scan.");
 
 function filesWithin(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

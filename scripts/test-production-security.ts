@@ -6,12 +6,15 @@ import sitemap from "../src/app/sitemap";
 import { safeCallbackUrl } from "../src/lib/auth-navigation";
 import { parseAdminImportJson } from "../src/server/admin/import";
 import { getAuthEnvironment } from "../src/server/auth/env";
+import { getResendEmailEnvironment } from "../src/server/email/transactional";
 import { checkQuestionAnswer } from "../src/server/questions/actions";
 
 const originalEnvironment = {
   secret: process.env.BETTER_AUTH_SECRET,
   url: process.env.BETTER_AUTH_URL,
   nodeEnv: process.env.NODE_ENV,
+  emailFrom: process.env.EMAIL_FROM,
+  resendApiKey: process.env.RESEND_API_KEY,
 };
 const mutableEnvironment = process.env as Record<string, string | undefined>;
 
@@ -22,6 +25,10 @@ function restoreEnvironment() {
   else process.env.BETTER_AUTH_URL = originalEnvironment.url;
   if (originalEnvironment.nodeEnv === undefined) delete mutableEnvironment.NODE_ENV;
   else mutableEnvironment.NODE_ENV = originalEnvironment.nodeEnv;
+  if (originalEnvironment.emailFrom === undefined) delete mutableEnvironment.EMAIL_FROM;
+  else mutableEnvironment.EMAIL_FROM = originalEnvironment.emailFrom;
+  if (originalEnvironment.resendApiKey === undefined) delete mutableEnvironment.RESEND_API_KEY;
+  else mutableEnvironment.RESEND_API_KEY = originalEnvironment.resendApiKey;
 }
 
 try {
@@ -47,6 +54,14 @@ try {
 
   mutableEnvironment["BETTER_AUTH_URL"] = "http://localhost:3000";
   assert.equal(getAuthEnvironment().useSecureCookies, false, "Local production smoke tests must remain usable over HTTP.");
+
+  mutableEnvironment["EMAIL_FROM"] = "NEET Prep <onboarding@resend.dev>";
+  delete mutableEnvironment["RESEND_API_KEY"];
+  assert.throws(() => getResendEmailEnvironment(), /RESEND_API_KEY is required/);
+  mutableEnvironment["RESEND_API_KEY"] = "invalid-test-key";
+  assert.throws(() => getResendEmailEnvironment(), /RESEND_API_KEY is invalid/);
+  mutableEnvironment["RESEND_API_KEY"] = "re_test_key_1234";
+  assert.equal(getResendEmailEnvironment().from, "NEET Prep <onboarding@resend.dev>");
 
   mutableEnvironment["BETTER_AUTH_SECRET"] = "short";
   assert.throws(() => getAuthEnvironment(), /at least 32/);
@@ -75,9 +90,11 @@ try {
   assert(disallowed.includes("/admin/"));
   assert(disallowed.includes("/dashboard/"));
   assert(disallowed.includes("/practice/attempt/"));
+  assert(disallowed.includes("/forgot-password"));
+  assert(disallowed.includes("/reset-password"));
 
   const indexedUrls = sitemap().map((entry) => entry.url);
-  assert(!indexedUrls.some((url) => /\/(?:admin|dashboard|sign-in|sign-up)(?:\/|$)/.test(url)));
+  assert(!indexedUrls.some((url) => /\/(?:admin|dashboard|sign-in|sign-up|forgot-password|reset-password)(?:\/|$)/.test(url)));
 
   const health = healthCheck();
   assert.deepEqual(await health.json(), { status: "ok" });

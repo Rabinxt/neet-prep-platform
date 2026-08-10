@@ -1,9 +1,11 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "@better-auth/prisma-adapter";
 import { nextCookies } from "better-auth/next-js";
+import { after } from "next/server";
 import { getPrisma } from "@/server/db/client";
 import { getAuthEnvironment } from "@/server/auth/env";
 import { claimAnonymousAttemptsForUser } from "@/server/attempts/claim";
+import { sendPasswordResetEmail } from "@/server/email/transactional";
 
 const environment = getAuthEnvironment();
 
@@ -18,6 +20,11 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     maxPasswordLength: 128,
     autoSignIn: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetEmail({ to: user.email, resetUrl: url });
+    },
+    resetPasswordTokenExpiresIn: 60 * 60,
+    revokeSessionsOnPasswordReset: true,
   },
   user: {
     additionalFields: {
@@ -41,6 +48,16 @@ export const auth = betterAuth({
       sameSite: "lax",
       secure: environment.useSecureCookies,
       path: "/",
+    },
+    backgroundTasks: {
+      handler: (promise) => {
+        try {
+          after(promise);
+        } catch {
+          // Standalone integration tests do not have a Next.js request scope.
+          void promise.catch(() => undefined);
+        }
+      },
     },
   },
   databaseHooks: {

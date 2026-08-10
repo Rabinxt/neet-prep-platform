@@ -33,10 +33,11 @@ for (const file of files) {
   }
 
   if (contents.includes(privateKeyMarker)) findings.add(normalized);
+  if (/\bre_[A-Za-z0-9_-]{20,}\b/.test(contents)) findings.add(normalized);
   for (const match of contents.matchAll(/postgres(?:ql)?:\/\/[^\s"'<>]+/gi)) {
     if (!placeholderMarkers.some((marker) => match[0].includes(marker))) findings.add(normalized);
   }
-  for (const match of contents.matchAll(/(?:DATABASE_URL|BETTER_AUTH_SECRET|API_KEY|ACCESS_TOKEN)\s*=\s*["']([^"'\r\n]+)["']/gi)) {
+  for (const match of contents.matchAll(/(?:DATABASE_URL|BETTER_AUTH_SECRET|RESEND_API_KEY|API_KEY|ACCESS_TOKEN)\s*=\s*["']([^"'\r\n]+)["']/gi)) {
     if (!placeholderMarkers.some((marker) => match[1].includes(marker))) findings.add(normalized);
   }
 }

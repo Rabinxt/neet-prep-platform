@@ -20,6 +20,7 @@
     "test:attempts": "tsx --test src/server/attempts/scoring.test.ts",
     "test:attempts:integration": "tsx scripts/test-attempt-persistence.ts",
     "test:auth": "tsx scripts/test-auth-ownership.ts",
+    "test:password-reset": "tsx scripts/test-password-reset.ts",
     "test:analytics": "tsx --test src/server/analytics/calculate.test.ts",
     "test:analytics:integration": "tsx scripts/test-dashboard-analytics.ts",
     "test:admin": "tsx scripts/test-admin-content.ts",
