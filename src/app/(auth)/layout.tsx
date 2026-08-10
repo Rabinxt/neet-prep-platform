@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { BrandMark } from "@/components/brand/brand-mark";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,7 +13,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <BrandMark className="relative [&_span:last-child]:text-white" />
         <div className="relative max-w-xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">One focused account</p>
-          <h1 className="mt-5 text-5xl font-bold leading-[1.05] tracking-[-0.055em]">Your practice should follow your progress.</h1>
+          <p className="mt-5 text-5xl font-bold leading-[1.05] tracking-[-0.055em]">Your practice should follow your progress.</p>
           <p className="mt-6 max-w-lg text-lg leading-8 text-slate-300">Move between anonymous exploration and a secure student account without losing the attempts you have already started.</p>
         </div>
         <div className="relative grid grid-cols-3 gap-3 text-sm">

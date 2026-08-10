@@ -20,9 +20,9 @@ function createPrismaClient() {
 export function getPrisma() {
   const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
-  if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = prisma;
-  }
+  // Reuse one client/pool for every invocation in a warm Node.js process.
+  // Serverless instances still remain isolated from one another.
+  globalForPrisma.prisma = prisma;
 
   return prisma;
 }

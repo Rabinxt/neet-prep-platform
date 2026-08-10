@@ -8,7 +8,10 @@ import { loadOwnedAttempt } from "@/server/attempts/service";
 export const metadata: Metadata = {
   title: "Saved Development Exam",
   description: "Resume or review a persistent development mock exam.",
+  robots: { index: false, follow: false },
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function MockExamAttemptPage({ params }: { params: Promise<{ attemptId: string }> }) {
   const { attemptId } = await params;

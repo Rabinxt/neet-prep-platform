@@ -142,7 +142,7 @@ export const getPublicSubject = cache(async (slug: string): Promise<{
       },
     };
   } catch {
-    console.error(`Unable to load subject "${slug}" from PostgreSQL; using the core subject fallback.`);
+    console.error("Unable to load the requested subject from PostgreSQL; using the core subject fallback.");
     const subject = fallbackSubjects().find((item) => item.slug === slug);
     return {
       source: "fallback",

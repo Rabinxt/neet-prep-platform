@@ -8,7 +8,10 @@ import { loadOwnedAttempt } from "@/server/attempts/service";
 export const metadata: Metadata = {
   title: "Saved Practice Attempt",
   description: "Resume or review a saved NEET practice attempt.",
+  robots: { index: false, follow: false },
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function PracticeAttemptPage({ params }: { params: Promise<{ attemptId: string }> }) {
   const { attemptId } = await params;

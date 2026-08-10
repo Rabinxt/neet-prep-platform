@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { getPrisma } from "@/server/db/client";
+import { getAuthEnvironment } from "@/server/auth/env";
 
 export const ANONYMOUS_ATTEMPT_COOKIE = "neet_anonymous_owner";
 const TOKEN_PATTERN = /^[A-Za-z0-9_-]{40,64}$/;
@@ -65,7 +66,7 @@ export async function getOrCreateAnonymousSessionId() {
 
   (await cookies()).set(ANONYMOUS_ATTEMPT_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: getAuthEnvironment().useSecureCookies,
     sameSite: "lax",
     path: "/",
     maxAge: ONE_YEAR_SECONDS,

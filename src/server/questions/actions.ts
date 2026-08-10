@@ -19,7 +19,13 @@ export async function checkQuestionAnswer(input: {
   questionId: string;
   optionId: string;
 }): Promise<AnswerCheckResult> {
-  if (!isSafeIdentifier(input.questionId) || !isSafeIdentifier(input.optionId)) {
+  if (
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.questionId)
+    || !isSafeIdentifier(input.optionId)
+  ) {
     return { status: "invalid", message: "The selected answer is invalid." };
   }
 

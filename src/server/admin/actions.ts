@@ -31,6 +31,10 @@ function failure(error: unknown, fallback: string): AdminActionResult {
   return { ok: false, message: fallback };
 }
 
+function isSafeAdminIdentifier(value: unknown): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= 100;
+}
+
 function refreshContent() {
   revalidatePath("/admin");
   revalidatePath("/admin/questions");
@@ -53,6 +57,7 @@ export async function createQuestionAction(input: unknown): Promise<AdminActionR
 
 export async function updateQuestionAction(id: string, input: unknown): Promise<AdminActionResult<{ id: string }>> {
   await requireAdmin();
+  if (!isSafeAdminIdentifier(id)) return { ok: false, message: "Question identifier is invalid." };
   try {
     const question = await updateAdminQuestion(id, input);
     refreshContent();
@@ -65,6 +70,9 @@ export async function updateQuestionAction(id: string, input: unknown): Promise<
 
 export async function setQuestionPublicationAction(id: string, isPublished: boolean): Promise<AdminActionResult> {
   await requireAdmin();
+  if (!isSafeAdminIdentifier(id) || typeof isPublished !== "boolean") {
+    return { ok: false, message: "Publication request is invalid." };
+  }
   try {
     await setAdminQuestionPublication(id, isPublished);
     refreshContent();
@@ -76,6 +84,7 @@ export async function setQuestionPublicationAction(id: string, isPublished: bool
 
 export async function bulkSetQuestionPublicationAction(ids: unknown, isPublished: boolean): Promise<AdminActionResult> {
   await requireAdmin();
+  if (typeof isPublished !== "boolean") return { ok: false, message: "Publication request is invalid." };
   try {
     const result = await bulkSetAdminQuestionPublication(ids, isPublished);
     refreshContent();
@@ -87,6 +96,7 @@ export async function bulkSetQuestionPublicationAction(ids: unknown, isPublished
 
 export async function deleteQuestionAction(id: string): Promise<AdminActionResult> {
   await requireAdmin();
+  if (!isSafeAdminIdentifier(id)) return { ok: false, message: "Question identifier is invalid." };
   try {
     await deleteAdminQuestion(id);
     refreshContent();
@@ -115,6 +125,7 @@ export async function saveHierarchyAction(
 ): Promise<AdminActionResult<{ id: string }>> {
   await requireAdmin();
   if (!isHierarchyKind(kind)) return { ok: false, message: "Hierarchy type is invalid." };
+  if (id !== null && !isSafeAdminIdentifier(id)) return { ok: false, message: "Hierarchy identifier is invalid." };
   try {
     const saved = id
       ? await hierarchyMutations[kind].update(id, input)
@@ -130,6 +141,7 @@ export async function saveHierarchyAction(
 export async function deleteHierarchyAction(kind: HierarchyKind, id: string): Promise<AdminActionResult> {
   await requireAdmin();
   if (!isHierarchyKind(kind)) return { ok: false, message: "Hierarchy type is invalid." };
+  if (!isSafeAdminIdentifier(id)) return { ok: false, message: "Hierarchy identifier is invalid." };
   try {
     await hierarchyMutations[kind].delete(id);
     refreshContent();

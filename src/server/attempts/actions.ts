@@ -42,6 +42,9 @@ export async function startPracticeAttempt(input: {
   difficulty?: string;
   count: PracticeQuestionCount;
 }): Promise<ActionResult> {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return { status: "invalid", message: "Choose a valid practice setup." };
+  }
   const count = parseQuestionCount(input.count);
   if (!isSafeIdentifier(input.subjectId) || !count) {
     return { status: "invalid", message: "Choose a valid practice setup." };
@@ -111,6 +114,9 @@ export async function startExamAttempt(input: {
   examType: keyof typeof examTypes;
   count: ExamQuestionCount;
 }): Promise<ActionResult> {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return { status: "invalid", message: "Choose a valid mock-test setup." };
+  }
   const count = parseQuestionCount(input.count);
   const configuration = examTypes[input.examType];
   if (!configuration || !count) {
@@ -152,7 +158,10 @@ export async function savePracticeSelection(input: {
   currentIndex: number;
 }): Promise<ActionResult> {
   if (
-    !isSafeIdentifier(input.attemptId)
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.attemptId)
     || !isSafeIdentifier(input.questionId)
     || (input.optionId !== null && !isSafeIdentifier(input.optionId))
     || !Number.isInteger(input.currentIndex)
@@ -210,7 +219,13 @@ export async function checkPracticeAnswer(input: {
   | { status: "checked"; isCorrect: boolean; correctOptionId: string; explanation: string | null }
   | { status: "invalid"; message: string }
 > {
-  if (!isSafeIdentifier(input.attemptId) || !isSafeIdentifier(input.questionId)) {
+  if (
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.attemptId)
+    || !isSafeIdentifier(input.questionId)
+  ) {
     return { status: "invalid", message: "The practice response is invalid." };
   }
   const owner = await getCurrentAttemptOwner({ createAnonymous: false });
@@ -265,7 +280,10 @@ export async function saveExamResponse(input: {
   nextIndex: number;
 }): Promise<ActionResult> {
   if (
-    !isSafeIdentifier(input.attemptId)
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.attemptId)
     || !isSafeIdentifier(input.questionId)
     || (input.optionId !== null && !isSafeIdentifier(input.optionId))
     || !["SAVE", "REVIEW", "CLEAR"].includes(input.intent)
@@ -345,7 +363,14 @@ export async function setAttemptCurrentQuestion(input: {
   type: "PRACTICE" | "MOCK_EXAM";
   currentIndex: number;
 }): Promise<ActionResult> {
-  if (!isSafeIdentifier(input.attemptId) || !Number.isInteger(input.currentIndex)) {
+  if (
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.attemptId)
+    || !["PRACTICE", "MOCK_EXAM"].includes(input.type)
+    || !Number.isInteger(input.currentIndex)
+  ) {
     return { status: "invalid", message: "The requested question is invalid." };
   }
   const owner = await getCurrentAttemptOwner({ createAnonymous: false });
@@ -383,7 +408,13 @@ export async function finishAttempt(input: {
   attemptId: string;
   type: "PRACTICE" | "MOCK_EXAM";
 }): Promise<ActionResult> {
-  if (!isSafeIdentifier(input.attemptId)) {
+  if (
+    !input
+    || typeof input !== "object"
+    || Array.isArray(input)
+    || !isSafeIdentifier(input.attemptId)
+    || !["PRACTICE", "MOCK_EXAM"].includes(input.type)
+  ) {
     return { status: "invalid", message: "This attempt is invalid." };
   }
   const owner = await getCurrentAttemptOwner({ createAnonymous: false });

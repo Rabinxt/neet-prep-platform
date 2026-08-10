@@ -10,6 +10,7 @@ const environment = getAuthEnvironment();
 export const auth = betterAuth({
   appName: "NEET Prep",
   baseURL: environment.baseURL,
+  trustedOrigins: [environment.baseURL],
   secret: environment.secret,
   database: prismaAdapter(getPrisma(), { provider: "postgresql" }),
   emailAndPassword: {
@@ -34,6 +35,13 @@ export const auth = betterAuth({
   },
   advanced: {
     cookiePrefix: "neet-prep",
+    useSecureCookies: environment.useSecureCookies,
+    defaultCookieAttributes: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: environment.useSecureCookies,
+      path: "/",
+    },
   },
   databaseHooks: {
     session: {

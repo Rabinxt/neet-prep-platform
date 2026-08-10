@@ -29,10 +29,13 @@ function anonymousBrowser() {
   };
 }
 
-function responseCookies(response: Response) {
+function rawResponseCookies(response: Response) {
   const headers = response.headers as Headers & { getSetCookie?: () => string[] };
-  const setCookies = headers.getSetCookie?.() ?? [response.headers.get("set-cookie") ?? ""];
-  return setCookies
+  return headers.getSetCookie?.() ?? [response.headers.get("set-cookie") ?? ""];
+}
+
+function responseCookies(response: Response) {
+  return rawResponseCookies(response)
     .map((value) => value.match(/^([^=;,]+)=([^;,]*)/)?.slice(1, 3))
     .filter((value): value is [string, string] => Boolean(value))
     .map(([name, value]) => `${name}=${value}`)
@@ -95,6 +98,12 @@ try {
 
   const registrationCookie = responseCookies(registerA);
   assert(registrationCookie, "Registration did not create a session cookie.");
+  const sessionCookieHeader = rawResponseCookies(registerA).find((value) => value.includes("session_token")) ?? "";
+  assert.match(sessionCookieHeader, /HttpOnly/i, "The auth session cookie was not HttpOnly.");
+  assert.match(sessionCookieHeader, /SameSite=Lax/i, "The auth session cookie was not SameSite=Lax.");
+  if (origin.startsWith("https://")) {
+    assert.match(sessionCookieHeader, /Secure/i, "The HTTPS auth session cookie was not Secure.");
+  }
   const sessionResponse = await authRequest("/get-session", { method: "GET", cookie: registrationCookie });
   assert.equal(sessionResponse.status, 200, "Current session retrieval failed.");
   const sessionData = await sessionResponse.json() as { user?: { id?: string } } | null;
