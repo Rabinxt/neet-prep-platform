@@ -21,7 +21,6 @@ export function SubjectCard({ subject }: { subject: SubjectSummary }) {
         tone.dark,
       )}
     >
-      <div className="dot-field absolute inset-0 opacity-30 transition-transform duration-700 group-hover:scale-110" />
       <span className="absolute left-0 top-10 h-20 w-1 rounded-r-full bg-white/45 transition-all duration-500 group-hover:h-32" />
       <div className={cn("absolute -right-16 -top-16 size-48 rounded-full opacity-20 blur-3xl transition-transform duration-500 group-hover:scale-125", tone.glow)} />
       <SubjectIcon slug={subject.slug} className="absolute -bottom-5 -right-4 size-44 rotate-[-8deg] text-white/[0.08] transition duration-500 group-hover:rotate-0 group-hover:scale-105" />

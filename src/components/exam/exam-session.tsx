@@ -38,6 +38,7 @@ const legend: Array<{ status: AttemptQuestionStatusValue; label: string }> = [
 export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(attempt.currentQuestionIndex);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [responses, setResponses] = useState<Record<string, ExamResponse>>(() => (
     Object.fromEntries(attempt.questions.map((question) => [question.id, {
       draftOptionId: question.selectedOptionId,
@@ -148,6 +149,7 @@ export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
           : {}),
       }));
       if (intent !== "CLEAR" && currentIndex < attempt.questions.length - 1) {
+        setDirection("forward");
         setCurrentIndex(nextIndex);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else if (intent !== "CLEAR") {
@@ -157,7 +159,8 @@ export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
   }
 
   function moveTo(index: number) {
-    if (locked || !attempt.questions[index]) return;
+    if (locked || !attempt.questions[index] || index === currentIndex) return;
+    setDirection(index > currentIndex ? "forward" : "backward");
     setCurrentIndex(index);
     setResponses((current) => ({
       ...current,
@@ -213,7 +216,7 @@ export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
           <Card className={cn("overflow-hidden rounded-2xl border-t-4 shadow-[0_24px_65px_rgba(15,23,42,0.11)]", tone.border)}>
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-3 sm:px-6"><p className="font-bold text-slate-900">Question {currentIndex + 1} of {attempt.questions.length}</p><p className="text-sm font-semibold text-slate-500">Marks: +{question.positiveMarks} · -{question.negativeMarks}</p></div>
-            <div key={question.id} className="question-enter p-5 sm:p-7">
+            <div key={question.id} className={cn(direction === "forward" ? "question-enter-forward" : "question-enter-backward", "p-5 sm:p-7")}>
               <p className="text-xs font-semibold text-slate-500">{question.subject.name} · {question.chapter.name}{question.topic ? ` · ${question.topic.name}` : ""}</p>
               <div className={cn("mt-4 inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-wider", tone.soft, tone.accent)}><SubjectIcon slug={question.subject.slug} className="size-5" />{question.subject.name}</div>
               <h2 className="mt-5 text-xl font-bold leading-8 tracking-[-0.015em] text-slate-950 sm:text-2xl">{question.questionText}</h2>
@@ -221,7 +224,7 @@ export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
                 <legend className="sr-only">Choose one answer</legend>
                 {question.options.map((option) => {
                   const selected = response.draftOptionId === option.id;
-                  return <label key={option.id} className={cn("choice-row group flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all duration-200 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-blue-600", selected ? "border-blue-600 bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563eb]" : "border-slate-200 bg-white text-slate-700 hover:translate-x-1 hover:border-slate-300 hover:bg-slate-50", locked && "cursor-default")}><input type="radio" className="sr-only" name={`exam-${question.id}`} checked={selected} onChange={() => selectOption(option.id)} /><span className={cn("grid size-7 shrink-0 place-items-center rounded-lg border text-sm font-bold", selected ? "border-blue-600 bg-blue-700 text-white" : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400")}>{option.optionLabel}</span><span className="pt-0.5 text-sm leading-6 text-slate-800 sm:text-base">{option.optionText}</span></label>;
+                  return <label key={option.id} className={cn("choice-row group flex cursor-pointer items-start gap-3 rounded-xl border p-4 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-blue-600", selected ? "border-blue-600 bg-blue-50 text-blue-600 shadow-[inset_3px_0_0_#2563eb]" : "border-slate-200 bg-white text-slate-700 hover:translate-x-1 hover:border-slate-300 hover:bg-slate-50", locked && "cursor-default")}><input type="radio" className="sr-only" name={`exam-${question.id}`} checked={selected} onChange={() => selectOption(option.id)} /><span className={cn("choice-mark grid size-7 shrink-0 place-items-center rounded-lg border text-sm font-bold", selected ? "border-blue-600 bg-blue-700 text-white" : "border-slate-300 bg-white text-slate-600 group-hover:border-slate-400")}>{option.optionLabel}</span><span className="pt-0.5 text-sm leading-6 text-slate-800 sm:text-base">{option.optionText}</span></label>;
                 })}
               </fieldset>
               {hasUnsavedChange && <p className="mt-4 text-xs font-semibold text-amber-700">This selection is not saved yet. Use Save &amp; Next or Mark for Review &amp; Next.</p>}
@@ -234,7 +237,7 @@ export function ExamSession({ attempt }: { attempt: ActiveAttemptData }) {
 
           <aside><Card className="overflow-hidden rounded-2xl p-5 lg:sticky lg:top-24">
             <div className="-mx-5 -mt-5 mb-5 flex items-center justify-between bg-slate-950 px-5 py-4 text-white"><h2 className="font-bold">Question palette</h2><span className="text-xs text-slate-400">{attempt.questions.length} total</span></div>
-            <div className="mt-4 grid grid-cols-5 gap-2">{attempt.questions.map((item, index) => <button key={item.id} type="button" disabled={locked} onClick={() => moveTo(index)} aria-label={`Question ${index + 1}: ${responses[item.id].status.toLowerCase().replaceAll("_", " ")}`} aria-current={index === currentIndex ? "step" : undefined} className={cn("grid aspect-square place-items-center rounded-lg border text-sm font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600", statusStyles[responses[item.id].status], index === currentIndex && "outline-2 outline-offset-2 outline-slate-900")}>{index + 1}</button>)}</div>
+            <div className="mt-4 grid grid-cols-5 gap-2">{attempt.questions.map((item, index) => <button key={item.id} type="button" disabled={locked} onClick={() => moveTo(index)} aria-label={`Question ${index + 1}: ${responses[item.id].status.toLowerCase().replaceAll("_", " ")}`} aria-current={index === currentIndex ? "step" : undefined} className={cn("grid aspect-square place-items-center rounded-lg border text-sm font-bold transition-[background-color,border-color,color,transform] duration-150 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600", statusStyles[responses[item.id].status], index === currentIndex && "outline-2 outline-offset-2 outline-slate-900")}>{index + 1}</button>)}</div>
             <div className="mt-5 space-y-2 border-t border-slate-200 pt-4">{legend.map((item) => <div key={item.status} className="flex items-center gap-2 text-xs text-slate-600"><span className={cn("size-5 rounded-md border", statusStyles[item.status])} /><span>{item.label}</span></div>)}</div>
             <p className="mt-4 text-xs leading-5 text-slate-500">Saved responses and review states survive refresh. Unsaved selections do not.</p>
           </Card></aside>

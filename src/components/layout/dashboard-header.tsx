@@ -10,8 +10,8 @@ export function DashboardHeader({ user }: { user: { name: string; email: string;
       <Container className="flex h-[4.5rem] items-center justify-between gap-4">
         <BrandMark />
         <nav className="flex items-center gap-1" aria-label="Dashboard navigation">
-          <Link href="/dashboard" className="hidden rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 sm:block">Overview</Link>
-          <Link href="/practice" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:block">Practice</Link>
+          <Link href="/dashboard" aria-current="page" className="relative hidden cursor-pointer rounded-lg bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 active:scale-[0.98] sm:block">Overview<span className="nav-marker absolute inset-x-3 bottom-0 h-0.5 bg-emerald-500" /></Link>
+          <Link href="/practice" className="hidden cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 active:scale-[0.98] sm:block">Practice</Link>
           {user.role === "ADMIN" ? <Link href="/admin" className="rounded-lg px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Admin</Link> : null}
           <Link href="/" className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Public site</Link>
           <span className="ml-1 hidden items-center gap-2 border-l border-slate-200 pl-3 md:flex" title={user.email}>

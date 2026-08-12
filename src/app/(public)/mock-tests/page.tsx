@@ -45,8 +45,6 @@ export default async function MockTestsPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="study-grid absolute inset-0 opacity-70" />
-        <div className="ambient-orb absolute -right-24 top-0 size-80 bg-blue-500/10 blur-3xl" />
         <Container className="reveal-up relative py-14 sm:py-20 [&_h1]:text-white [&_p:last-child]:text-slate-300 [&_p:first-child]:text-blue-400 [&_p:first-child_span]:bg-blue-400">
           <PageHeading
             eyebrow="Exam mode MVP"

@@ -21,9 +21,6 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="study-grid absolute inset-0 opacity-70" />
-        <div className="ambient-orb absolute -left-32 top-20 size-80 bg-sky-500/10 blur-3xl" />
-        <div className="ambient-orb absolute -right-32 bottom-0 size-96 bg-emerald-500/10 blur-3xl" />
         <Container className="relative grid gap-12 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24">
           <div className="reveal-up">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-sm font-semibold text-emerald-300"><SparkIcon className="size-4" /> Your NEET study command centre</div>
@@ -84,7 +81,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      <section className="py-16 sm:py-20"><Container><div className="surface-lift relative overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-12 text-white sm:px-12 sm:py-14"><div className="dot-field absolute inset-0 opacity-20" /><div className="ambient-orb absolute -right-16 -top-20 size-64 bg-emerald-400/20 blur-3xl" /><div className="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-center"><div><p className="text-sm font-bold text-emerald-400">Your next question is ready.</p><h2 className="mt-2 max-w-2xl text-3xl font-bold tracking-[-0.04em] sm:text-4xl">Don’t wait to feel prepared. Build the feeling.</h2></div><ButtonLink href="/practice" size="lg" className="shrink-0 bg-white text-slate-950 shadow-none hover:bg-emerald-50">Start practising <ArrowRightIcon className="size-4" /></ButtonLink></div></div></Container></section>
+      <section className="py-16 sm:py-20"><Container><div className="surface-lift relative overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-12 text-white sm:px-12 sm:py-14"><div className="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-center"><div><p className="text-sm font-bold text-emerald-400">Your next question is ready.</p><h2 className="mt-2 max-w-2xl text-3xl font-bold tracking-[-0.04em] sm:text-4xl">Don’t wait to feel prepared. Build the feeling.</h2></div><ButtonLink href="/practice" size="lg" className="shrink-0 bg-white text-slate-950 shadow-none hover:bg-emerald-50">Start practising <ArrowRightIcon className="size-4" /></ButtonLink></div></div></Container></section>
     </>
   );
 }

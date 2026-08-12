@@ -37,8 +37,6 @@ export default async function SubjectPage({ params }: SubjectPageProps) {
   return (
     <>
       <section className={cn("relative overflow-hidden text-white", tone.dark)}>
-        <div className="dot-field absolute inset-0 opacity-30" />
-        <div className={cn("ambient-orb absolute -right-24 -top-24 size-80 opacity-20 blur-3xl", tone.glow)} />
         <SubjectIcon slug={subject.slug} className="float-slower absolute -bottom-24 right-[8%] size-96 rotate-[-8deg] text-white/[0.055]" />
         <Container className="reveal-up relative py-12 sm:py-20">
           <nav className="mb-9 flex items-center gap-2 text-sm text-white/55" aria-label="Breadcrumb">

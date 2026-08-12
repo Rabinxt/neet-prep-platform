@@ -17,8 +17,6 @@ export default async function SubjectsPage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-slate-200 bg-white">
-        <div className="study-grid absolute inset-0" />
-        <div className="ambient-orb absolute -right-24 -top-24 size-72 bg-emerald-100/80 blur-3xl" />
         <Container className="reveal-up relative py-16 sm:py-20">
           <PageHeading
             eyebrow="NEET syllabus"

@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
-import { Card } from "@/components/ui/card";
 
 export function EmptyState({ icon, title, description, action }: { icon?: ReactNode; title: string; description: string; action?: ReactNode }) {
   return (
-    <Card className="border-dashed bg-white/80 p-8 text-center sm:p-12">
-      {icon && <div className="mx-auto grid size-12 place-items-center rounded-2xl bg-slate-100 text-slate-500">{icon}</div>}
-      <h2 className="mt-4 text-xl font-bold tracking-tight text-slate-950">{title}</h2>
-      <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">{description}</p>
-      {action && <div className="mt-6">{action}</div>}
-    </Card>
+    <section className="border-y border-slate-300 bg-white/55 px-5 py-8 sm:px-8 sm:py-10">
+      <div className="mx-auto grid max-w-3xl gap-5 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
+        {icon && <div className="text-emerald-700 sm:border-r sm:border-slate-200 sm:pr-6 [&_svg]:size-8">{icon}</div>}
+        <div><h2 className="text-xl font-bold tracking-tight text-slate-950">{title}</h2><p className="mt-2 max-w-lg text-sm leading-6 text-slate-500">{description}</p></div>
+        {action && <div>{action}</div>}
+      </div>
+    </section>
   );
 }

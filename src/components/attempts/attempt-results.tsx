@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { SubjectIcon, getSubjectTheme } from "@/components/subjects/subject-visual";
+import { SubjectMotif } from "@/components/subjects/subject-motif";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
-import { ArrowRightIcon, CheckIcon, TargetIcon } from "@/components/ui/icons";
-import type { AttemptReviewItem, CompletedAttemptData } from "@/server/attempts/types";
+import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
+import type { AttemptReviewItem, CompletedAttemptData } from "@/server/attempts/types";
 
 export function AttemptResults({ attempt }: { attempt: CompletedAttemptData }) {
   const router = useRouter();
@@ -17,64 +17,51 @@ export function AttemptResults({ attempt }: { attempt: CompletedAttemptData }) {
   const isExam = attempt.type === "MOCK_EXAM";
   if (showReview) return <AnswerReview attempt={attempt} onBack={() => setShowReview(false)} />;
 
-  const scoreProgress = attempt.overall.maximumMarks > 0
-    ? Math.max(0, Math.min(100, (attempt.overall.score / attempt.overall.maximumMarks) * 100))
-    : 0;
-  const metrics = [
-    { label: "Attempted", value: attempt.overall.attempted, tone: "text-blue-700", line: "bg-blue-500" },
-    { label: "Correct", value: attempt.overall.correct, tone: "text-emerald-700", line: "bg-emerald-500" },
-    { label: "Incorrect", value: attempt.overall.incorrect, tone: "text-rose-700", line: "bg-rose-500" },
-    { label: "Unanswered", value: attempt.overall.unanswered, tone: "text-slate-600", line: "bg-slate-400" },
-  ];
+  const leadSubject = attempt.subjects[0];
+  const leadSlug = leadSubject?.slug ?? "biology";
+  const tone = getSubjectTheme(leadSlug);
+  const scoreProgress = attempt.overall.maximumMarks > 0 ? Math.max(0, Math.min(1, attempt.overall.score / attempt.overall.maximumMarks)) : 0;
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-xl"><Container className="flex h-[4.5rem] items-center"><BrandMark /></Container></header>
+    <div className="min-h-screen bg-[#eef3f1]">
+      <header className="border-b border-slate-300"><Container className="flex h-[4.5rem] items-center"><BrandMark /></Container></header>
       <main>
-        <section className="relative overflow-hidden bg-slate-950 py-12 text-white sm:py-16">
-          <div className="study-grid absolute inset-0 opacity-60" />
-          <div className="absolute left-1/2 top-0 size-96 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl" />
-          <Container className="relative">
-            <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div className="reveal-up text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300"><TargetIcon className="size-4" />{attempt.status === "EXPIRED" ? "Time expired · submitted" : isExam ? "Exam submitted" : "Practice complete"}</div>
-                <h1 className="mt-5 text-3xl font-bold tracking-[-0.045em] sm:text-5xl">{attempt.name}</h1>
-                <p className="mt-3 text-sm text-slate-400">Saved securely and ready to review whenever you are.</p>
+        <section className="relative isolate overflow-hidden border-b border-slate-300">
+          <SubjectMotif slug={leadSlug} className={cn("absolute -right-40 top-2 w-[55rem] opacity-[0.09]", tone.accent)} />
+          <Container className="sequence-enter relative py-10 sm:py-14 lg:py-20">
+            <div className="flex flex-wrap items-center gap-4"><p className={cn("flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em]", tone.accent)}><span className={cn("h-px w-10", tone.glow)} />{attempt.status === "EXPIRED" ? "Time resolved · submitted" : isExam ? "Exam complete" : "Practice complete"}</p><span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">Saved result</span></div>
+            <h1 className="mt-6 max-w-4xl text-2xl font-black tracking-[-0.04em] text-slate-950 sm:text-4xl">{attempt.name}</h1>
+
+            <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">Final score</p>
+                <p className="result-number mt-2 whitespace-nowrap font-mono text-[clamp(6rem,17vw,13rem)] font-bold leading-[0.78] tracking-[-0.1em] text-slate-950">{attempt.overall.score}<span className="ml-3 text-[0.23em] tracking-[-0.04em] text-slate-400">/{attempt.overall.maximumMarks}</span></p>
+                <div className="mt-8 h-px max-w-4xl bg-slate-300"><div className={cn("progress-fill h-px", tone.glow)} style={{ transform: `scaleX(${scoreProgress})` }} /></div>
               </div>
-              <div className="mx-auto grid place-items-center">
-                <div className="score-ring grid size-44 place-items-center rounded-full p-2 shadow-[0_0_80px_rgba(52,211,153,0.15)]" style={{ background: `conic-gradient(#34d399 ${scoreProgress}%, rgba(255,255,255,.1) 0)` }} aria-label={`Score ${attempt.overall.score} out of ${attempt.overall.maximumMarks}`}>
-                  <div className="grid size-full place-items-center rounded-full bg-slate-950 text-center"><div><span className="block text-4xl font-bold">{attempt.overall.score}</span><span className="mt-1 block text-xs font-semibold text-slate-400">of {attempt.overall.maximumMarks} marks</span></div></div>
-                </div>
+              <div className="border-t border-slate-300 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-2">
+                <p className="font-mono text-[clamp(4rem,8vw,7rem)] font-bold leading-none tracking-[-0.08em] text-slate-950">{attempt.overall.accuracy}<span className={cn("text-[0.38em]", tone.accent)}>%</span></p>
+                <p className="mt-3 text-sm font-bold text-slate-800">accuracy from {isExam ? "attempted" : "checked"} answers</p>
+                <p className="mt-3 max-w-xs text-sm leading-6 text-slate-500">Review the pattern, not just the number. Every incorrect answer is a precise place to return.</p>
               </div>
             </div>
+
+            <dl className="stagger-in mt-12 grid grid-cols-2 border-y border-slate-300 sm:grid-cols-4">
+              <ResultMeasure label="Correct" value={attempt.overall.correct} className="text-emerald-700" />
+              <ResultMeasure label="Incorrect" value={attempt.overall.incorrect} className="text-rose-700" />
+              <ResultMeasure label="Unanswered" value={attempt.overall.unanswered} className="text-slate-600" />
+              <ResultMeasure label="Attempted" value={attempt.overall.attempted} className={tone.accent} />
+            </dl>
           </Container>
         </section>
 
-        <Container className="py-8 sm:py-12">
-          <div className="mx-auto max-w-5xl">
-            <div className="stagger-in grid gap-4 sm:grid-cols-[1.35fr_0.85fr]">
-              <Card className="surface-lift relative overflow-hidden border-0 bg-[linear-gradient(135deg,#087a55,#07523e)] p-6 text-white sm:p-8"><div className="dot-field absolute inset-0 opacity-20" /><div className="ambient-orb absolute -right-12 -top-16 size-52 bg-emerald-300/25 blur-3xl" /><div className="relative"><p className="text-sm font-semibold text-emerald-100">Accuracy</p><p className="mt-2 text-6xl font-bold tracking-[-0.06em]">{attempt.overall.accuracy}<span className="text-3xl text-emerald-200">%</span></p><div className="mt-6 h-2 overflow-hidden rounded-full bg-black/15"><div className="progress-shine h-full rounded-full bg-white" style={{ width: `${attempt.overall.accuracy}%` }} /></div><p className="mt-3 text-xs text-emerald-100">Based on {isExam ? "attempted" : "checked"} answers</p></div></Card>
-              <Card className="border-0 p-6 sm:p-8"><p className="text-sm font-semibold text-slate-500">Questions in this set</p><p className="mt-2 text-6xl font-bold tracking-[-0.06em] text-slate-950">{attempt.overall.total}</p><p className="mt-5 text-sm text-slate-500">{attempt.overall.attempted} answered · {attempt.overall.unanswered} left open</p></Card>
-            </div>
+        <Container className="py-14 sm:py-20">
+          <div className="mx-auto max-w-6xl space-y-20">
+            {attempt.subjects.length > 0 ? <SubjectBands attempt={attempt} /> : null}
 
-            <div className="stagger-in mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {metrics.map((metric) => <div key={metric.label} className="relative overflow-hidden border-b border-slate-200 bg-white px-5 py-5 shadow-sm"><span className={cn("absolute inset-x-0 top-0 h-1", metric.line)} /><p className={cn("text-3xl font-bold", metric.tone)}>{metric.value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-500">{metric.label}</p></div>)}
-            </div>
-
-            {isExam && attempt.subjects.length > 1 && (
-              <section className="mt-10">
-                <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Performance map</p><h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950">Subject by subject</h2></div>
-                <div className="mt-5 divide-y divide-slate-200 border-y border-slate-200 bg-white px-5 sm:px-7">
-                  {attempt.subjects.map((subject) => {
-                    const tone = getSubjectTheme(subject.slug);
-                    const percentage = subject.maximumMarks > 0 ? Math.max(0, Math.min(100, (subject.score / subject.maximumMarks) * 100)) : 0;
-                    return <div key={subject.slug} className="grid gap-4 py-5 sm:grid-cols-[1fr_1.5fr_auto] sm:items-center"><div className="flex items-center gap-3"><span className={cn("grid size-10 place-items-center rounded-xl", tone.soft, tone.accent)}><SubjectIcon slug={subject.slug} className="size-6" /></span><div><p className="font-bold text-slate-950">{subject.name}</p><p className="text-xs text-slate-500">{subject.correct} correct · {subject.incorrect} incorrect</p></div></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className={cn("h-full rounded-full", tone.glow)} style={{ width: `${percentage}%` }} /></div><p className="font-bold text-slate-950">{subject.score} <span className="text-sm font-medium text-slate-400">/ {subject.maximumMarks}</span></p></div>;
-                  })}
-                </div>
-              </section>
-            )}
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center"><Button type="button" size="lg" onClick={() => setShowReview(true)}>Review every answer <ArrowRightIcon className="size-4" /></Button><Button type="button" size="lg" variant="secondary" onClick={() => router.push(isExam ? "/mock-tests" : "/practice")}>{isExam ? "Take another test" : "Start another practice"}</Button></div>
+            <section className="grid gap-8 border-y border-slate-400 py-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+              <div><p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-700">Turn the result into revision</p><h2 className="mt-3 max-w-3xl text-3xl font-black tracking-[-0.045em] text-slate-950 sm:text-5xl">The useful part starts with the answers.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">Compare your reasoning with the correct response and explanation, one question at a time.</p></div>
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col"><Button type="button" size="lg" className="group min-w-64 justify-between rounded-none" onClick={() => setShowReview(true)}>Review every answer <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-1" /></Button><Button type="button" size="lg" variant="secondary" className="rounded-none" onClick={() => router.push(isExam ? "/mock-tests" : "/practice")}>{isExam ? "Take another test" : "Compose another session"}</Button></div>
+            </section>
           </div>
         </Container>
       </main>
@@ -82,22 +69,20 @@ export function AttemptResults({ attempt }: { attempt: CompletedAttemptData }) {
   );
 }
 
+function ResultMeasure({ label, value, className }: { label: string; value: number; className: string }) {
+  return <div className="border-b border-r border-slate-200 px-4 py-5 last:border-r-0 sm:border-b-0 sm:px-6"><dt className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">{label}</dt><dd className={cn("mt-3 font-mono text-4xl font-bold tracking-[-0.05em]", className)}>{value}</dd></div>;
+}
+
+function SubjectBands({ attempt }: { attempt: CompletedAttemptData }) {
+  return <section aria-labelledby="subject-results-heading"><div className="grid gap-5 lg:grid-cols-[0.55fr_1fr] lg:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-700">Performance field</p><h2 id="subject-results-heading" className="mt-2 text-3xl font-black tracking-[-0.045em] text-slate-950 sm:text-5xl">Subject by subject.</h2></div><p className="max-w-lg text-sm leading-6 text-slate-500 lg:justify-self-end">Marks and answer states come directly from the submitted attempt.</p></div><div className="stagger-in mt-8 border-y border-slate-300">{attempt.subjects.map((subject, index) => { const subjectTone = getSubjectTheme(subject.slug); const percentage = subject.maximumMarks > 0 ? Math.max(0, Math.min(1, subject.score / subject.maximumMarks)) : 0; return <div key={subject.slug} className={cn("relative grid min-h-28 overflow-hidden border-b border-slate-300 px-4 py-6 last:border-b-0 sm:grid-cols-[3rem_minmax(11rem,0.55fr)_minmax(12rem,1fr)_7rem] sm:items-center sm:px-6", subjectTone.soft)}><SubjectMotif slug={subject.slug} className={cn("absolute -right-16 top-1/2 w-72 -translate-y-1/2 opacity-[0.08]", subjectTone.accent)} /><span className="relative font-mono text-xs text-slate-400">0{index + 1}</span><div className="relative flex items-center gap-3"><SubjectIcon slug={subject.slug} className={cn("size-7", subjectTone.accent)} /><div><p className="text-xl font-black text-slate-950">{subject.name}</p><p className="mt-1 text-xs text-slate-500">{subject.correct} correct · {subject.incorrect} incorrect · {subject.unanswered} open</p></div></div><div className="relative mt-5 h-px bg-white sm:mt-0"><div className={cn("progress-fill h-px", subjectTone.glow)} style={{ transform: `scaleX(${percentage})` }} /></div><p className="relative mt-3 text-right font-mono text-xl font-bold text-slate-950 sm:mt-0">{subject.score}<span className="text-xs text-slate-400">/{subject.maximumMarks}</span></p></div>; })}</div></section>;
+}
+
 function AnswerReview({ attempt, onBack }: { attempt: CompletedAttemptData; onBack: () => void }) {
-  return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950 text-white shadow-lg"><Container className="flex min-h-[4.5rem] items-center justify-between gap-4 py-2"><div className="min-w-0"><p className="text-xs font-bold uppercase tracking-wider text-emerald-400">Answer review</p><h1 className="truncate font-bold text-white">{attempt.name}</h1></div><Button type="button" variant="secondary" size="sm" onClick={onBack}>Back to results</Button></Container></header>
-      <main><Container className="py-6 sm:py-10"><div className="stagger-in mx-auto max-w-4xl space-y-5">{attempt.review.map((item, index) => <ReviewQuestion key={item.questionId} item={item} number={index + 1} />)}</div></Container></main>
-    </div>
-  );
+  return <div className="min-h-screen bg-[#eef3f1]"><header className="sticky top-0 z-40 border-b border-slate-300 bg-[#eef3f1]/95 backdrop-blur"><Container className="flex min-h-[4.5rem] items-center justify-between gap-4 py-2"><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">Answer review</p><h1 className="truncate font-black text-slate-950">{attempt.name}</h1></div><Button type="button" variant="secondary" size="sm" className="rounded-none" onClick={onBack}>Back to result</Button></Container></header><main><Container className="py-8 sm:py-12"><div className="mx-auto max-w-5xl"><div className="mb-10 grid gap-5 border-b border-slate-300 pb-7 sm:grid-cols-[1fr_auto] sm:items-end"><div><p className="font-mono text-xs text-emerald-700">{String(attempt.review.length).padStart(2, "0")} QUESTIONS</p><h2 className="mt-2 text-4xl font-black tracking-[-0.05em] text-slate-950">Read the reasoning trail.</h2></div><p className="max-w-sm text-sm leading-6 text-slate-500">Your answer, the correct answer, and the explanation stay spatially connected.</p></div><div className="space-y-12">{attempt.review.map((item, index) => <ReviewQuestion key={item.questionId} item={item} number={index + 1} />)}</div></div></Container></main></div>;
 }
 
 function ReviewQuestion({ item, number }: { item: AttemptReviewItem; number: number }) {
   const tone = getSubjectTheme(item.subject.slug);
-  const outcomeTone = item.outcome === "CORRECT" ? "bg-emerald-50 text-emerald-800" : item.outcome === "INCORRECT" ? "bg-rose-50 text-rose-800" : "bg-slate-100 text-slate-700";
-  return (
-    <Card className={cn("overflow-hidden border-t-4", tone.border)}>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50/80 px-5 py-4 sm:px-6"><div className="flex items-center gap-3"><span className={cn("grid size-9 place-items-center rounded-xl", tone.soft, tone.accent)}><SubjectIcon slug={item.subject.slug} className="size-5" /></span><div><p className="text-sm font-bold text-slate-900">Question {number}</p><p className="mt-1 text-xs text-slate-500">{item.subject.name} · {item.chapter.name}{item.topic ? ` · ${item.topic.name}` : ""}</p></div></div><div className="flex items-center gap-2"><span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", outcomeTone)}>{item.outcome.toLowerCase()}</span><span className="text-sm font-bold text-slate-700">{item.marksAwarded > 0 ? "+" : ""}{item.marksAwarded} marks</span></div></div>
-      <div className="p-5 sm:p-7"><h2 className="text-lg font-bold leading-8 text-slate-950">{item.questionText}</h2><div className="mt-5 space-y-2">{item.options.map((option) => { const isCorrect = option.id === item.correctOptionId; const isSelected = option.id === item.selectedOptionId; return <div key={option.id} className={cn("flex items-start gap-3 rounded-xl border p-3 text-sm", isCorrect && "border-emerald-500 bg-emerald-50 shadow-[inset_3px_0_0_#10b981]", isSelected && !isCorrect && "border-rose-500 bg-rose-50 shadow-[inset_3px_0_0_#f43f5e]", !isCorrect && !isSelected && "border-slate-200")}><span className={cn("grid size-7 shrink-0 place-items-center rounded-lg border font-bold", isCorrect ? "border-emerald-600 bg-emerald-700 text-white" : isSelected ? "border-rose-500 bg-rose-600 text-white" : "border-slate-300 bg-white text-slate-600")}>{isCorrect ? <CheckIcon className="size-4" /> : option.optionLabel}</span><span className="pt-1 text-slate-800">{option.optionText}</span>{isSelected && <span className="ml-auto shrink-0 pt-1 text-xs font-bold text-slate-500">Your answer</span>}</div>; })}</div>{item.outcome === "UNANSWERED" && <p className="mt-4 text-sm font-semibold text-slate-600">You did not submit an answer for this question.</p>}{item.explanation && <div className="mt-5 border-l-4 border-blue-400 bg-blue-50 p-4"><p className="text-xs font-bold uppercase tracking-wider text-blue-800">Explanation</p><p className="mt-2 text-sm leading-6 text-slate-700">{item.explanation}</p></div>}</div>
-    </Card>
-  );
+  const outcomeTone = item.outcome === "CORRECT" ? "text-emerald-700" : item.outcome === "INCORRECT" ? "text-rose-700" : "text-slate-600";
+  return <article className="grid gap-5 border-t border-slate-400 pt-6 sm:grid-cols-[5rem_minmax(0,1fr)]"><div><p className="font-mono text-3xl font-bold tracking-[-0.05em] text-slate-400">{String(number).padStart(2, "0")}</p><p className={cn("mt-2 text-[10px] font-bold uppercase tracking-[0.16em]", outcomeTone)}>{item.outcome.toLowerCase()}</p><p className="mt-1 font-mono text-xs text-slate-500">{item.marksAwarded > 0 ? "+" : ""}{item.marksAwarded} marks</p></div><div><div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.12em]"><SubjectIcon slug={item.subject.slug} className={cn("size-5", tone.accent)} /><span className={tone.accent}>{item.subject.name}</span><span className="text-slate-300">/</span><span className="text-slate-500">{item.chapter.name}</span>{item.topic ? <><span className="text-slate-300">/</span><span className="text-slate-500">{item.topic.name}</span></> : null}</div><h2 className="mt-5 text-xl font-black leading-8 tracking-[-0.02em] text-slate-950 sm:text-2xl">{item.questionText}</h2><div className="mt-6 divide-y divide-slate-200 border-y border-slate-300">{item.options.map((option) => { const isCorrect = option.id === item.correctOptionId; const isSelected = option.id === item.selectedOptionId; return <div key={option.id} className={cn("grid min-h-14 grid-cols-[2.5rem_1fr_auto] items-center gap-3 py-3", isCorrect && "border-l-2 border-emerald-500 bg-emerald-50/70 pl-3", isSelected && !isCorrect && "border-l-2 border-rose-500 bg-rose-50/60 pl-3")}><span className={cn("font-mono font-bold", isCorrect ? "text-emerald-700" : isSelected ? "text-rose-700" : "text-slate-400")}>{isCorrect ? <CheckIcon className="size-4" /> : option.optionLabel}</span><span className={cn("text-sm text-slate-800", (isCorrect || isSelected) && "font-bold")}>{option.optionText}</span>{isSelected ? <span className="pr-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Your answer</span> : null}</div>; })}</div>{item.outcome === "UNANSWERED" ? <p className="mt-4 text-sm font-semibold text-slate-600">You did not submit an answer for this question.</p> : null}{item.explanation ? <section className="mt-6 grid gap-3 border-y border-blue-300 py-5 sm:grid-cols-[8rem_1fr]"><p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-800">Explanation</p><p className="text-sm leading-7 text-slate-700">{item.explanation}</p></section> : null}</div></article>;
 }

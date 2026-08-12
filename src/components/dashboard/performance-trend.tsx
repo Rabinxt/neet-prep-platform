@@ -56,10 +56,10 @@ export function PerformanceTrend({ points }: { points: TrendPoint[] }) {
           d={`M ${coordinates[0].x} ${TOP + chartHeight} L ${coordinates.map((point) => `${point.x} ${point.y}`).join(" L ")} L ${coordinates.at(-1)!.x} ${TOP + chartHeight} Z`}
           fill="url(#trend-area)"
         />
-        <polyline points={polyline} fill="none" stroke="#059669" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline className="trend-line" points={polyline} fill="none" stroke="#059669" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
         {coordinates.map((point, index) => (
           <g key={point.id}>
-            <circle cx={point.x} cy={point.y} r="5" fill="white" stroke="#059669" strokeWidth="3" />
+            <circle className="trend-point" style={{ animationDelay: `${180 + index * 55}ms` }} cx={point.x} cy={point.y} r="5" fill="white" stroke="#059669" strokeWidth="3" />
             <text x={point.x} y={HEIGHT - 10} textAnchor="middle" className="fill-slate-500 text-[10px] font-semibold">{index + 1}</text>
           </g>
         ))}

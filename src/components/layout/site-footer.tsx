@@ -14,7 +14,6 @@ const footerLinks = [
 export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-slate-950 text-white">
-      <div className="dot-field absolute inset-0 opacity-30" />
       <Container className="relative py-12 sm:py-14">
         <div className="grid gap-10 md:grid-cols-[1fr_auto] md:items-start">
           <div className="max-w-md [&_span:last-child]:!text-white [&_span:last-child_span]:!text-emerald-400">
