@@ -12,7 +12,7 @@ const example = `{
   "questions": []
 }`;
 
-export function ImportPanel() {
+export function JsonImportPanel() {
   const [raw, setRaw] = useState("");
   const [preview, setPreview] = useState<AdminImportPreview | null>(null);
   const [message, setMessage] = useState<{ ok: boolean; text: string; details?: string } | null>(null);

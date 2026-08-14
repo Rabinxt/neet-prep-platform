@@ -23,6 +23,7 @@ import {
   updateAdminTopic,
 } from "@/server/admin/hierarchy";
 import { applyAdminImport, previewAdminImport } from "@/server/admin/import";
+import { applyAdminCsvImport, previewAdminCsvImport } from "@/server/admin/csv-import";
 
 function failure(error: unknown, fallback: string): AdminActionResult {
   if (error instanceof AdminValidationError) {
@@ -196,6 +197,41 @@ export async function applyImportAction(raw: string): Promise<AdminActionResult<
     refreshContent();
     revalidatePath("/admin/import");
     return { ok: true, message: "Content imported in one transaction.", data: result };
+  } catch (error) {
+    return importFailure(error);
+  }
+}
+
+export async function previewCsvImportAction(formData: FormData): Promise<AdminActionResult<Awaited<ReturnType<typeof previewAdminCsvImport>>>> {
+  await requireAdmin();
+  const file = formData.get("file");
+  if (!(file instanceof File)) return { ok: false, message: "Choose a CSV file first." };
+  try {
+    const preview = await previewAdminCsvImport(file);
+    return {
+      ok: true,
+      message: preview.hasBlockingErrors
+        ? "CSV parsed, but blocking row errors must be corrected."
+        : "CSV is valid and ready for review.",
+      data: preview,
+    };
+  } catch (error) {
+    return failure(error, "CSV could not be validated.");
+  }
+}
+
+export async function applyCsvImportAction(
+  formData: FormData,
+): Promise<AdminActionResult<Awaited<ReturnType<typeof applyAdminCsvImport>>>> {
+  await requireAdmin();
+  const file = formData.get("file");
+  const acknowledgeWarnings = formData.get("acknowledgeWarnings") === "true";
+  if (!(file instanceof File)) return { ok: false, message: "Choose a CSV file first." };
+  try {
+    const result = await applyAdminCsvImport(file, acknowledgeWarnings);
+    refreshContent();
+    revalidatePath("/admin/import");
+    return { ok: true, message: "CSV imported in one transaction.", data: result };
   } catch (error) {
     return importFailure(error);
   }
